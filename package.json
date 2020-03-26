@@ -1,0 +1,50 @@
+{
+  "name": "rr",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "ios": "react-native run-ios",
+    "android": "react-native run-android",
+    "re:clean": "bsb -clean-world",
+    "re:watch": "bsb -clean-world -make-world -w",
+    "re:build": "bsb -clean-world -make-world",
+    "test": "jest",
+    "relay": "reason-relay-compiler",
+    "relay:watch": "reason-relay-compiler --watch"
+  },
+  "dependencies": {
+    "bs-fetch": "^0.5.2",
+    "graphql": "^14.6.0",
+    "react": "0.0.0-experimental-f6b8d31a7",
+    "react-native": "^0.61.0",
+    "react-relay": "0.0.0-experimental-5f1cb628",
+    "reason-react": "^0.7.0",
+    "reason-react-native": "^0.61.1",
+    "reason-relay": "^0.5.3",
+    "relay-compiler": "8.0.0",
+    "relay-config": "8.0.0",
+    "relay-runtime": "8.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "bs-platform": "^7.2.2",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-(native|universal|navigation)-(.*)|@react-native-community/(.*)|@react-navigation/(.*)|bs-platform)"
+    ]
+  },
+  "resolutions": {
+    "react": "0.0.0-experimental-f6b8d31a7",
+    "react-dom": "0.0.0-experimental-5f1cb628"
+  }
+}
