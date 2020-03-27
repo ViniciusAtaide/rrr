@@ -5,7 +5,6 @@
  * Converted from https://github.com/facebook/react-native/blob/724fe11472cb874ce89657b2c3e7842feff04205/template/App.js
  * With a few tweaks
  */
-
 type reactNativeNewAppScreenColors = {
   .
   "primary": string,
@@ -56,56 +55,35 @@ let styles =
             ~textAlign=`right,
             (),
           ),
+        "center":
+          style(
+            ~alignItems=`center,
+            ~justifyContent=`center,
+            ~height=100.->pct,
+            (),
+          ),
       })
     )
   );
 
-module Query = [%relay.query
-  {|
-  query AppQuery($userId: Int!) {
-    userById(id: $userId) {
-      name
-      email
-    }
-  }
-|}
-];
-
-module Internal = {
-  open ReactNative;
-
-  [@react.component]
-  let make = () => {
-    let queryData = Query.use(~variables={userId: 10}, ());
-
-    switch (queryData.userById) {
-    | Some(user) =>
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior=`automatic style={styles##scrollView}>
-          <View style={styles##body}>
-            <View style={styles##sectionContainer}>
-              <Text style={styles##sectionDescription}>
-                <Text style={styles##highlight}>
-                  {(user.name ++ "  ")->React.string}
-                </Text>
-                <Text> user.email->React.string </Text>
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    | None => React.null
-    };
-  };
-};
-
 module Loading = {
   open ReactNative;
+
   [@react.component]
-  let make = () => <View> <Text> "Loadingg"->React.string </Text> </View>;
+  let make = () =>
+    <View style={styles##center}>
+      <Text> "Loading"->React.string </Text>
+    </View>;
 };
 
 [@react.component]
-let make = () =>
-  <React.Suspense fallback={<Loading />}> <Internal /> </React.Suspense>;
+let app = () =>
+  <ReasonRelay.Context.Provider environment=Relay.environment>
+    <React.Suspense fallback={<Loading />}>
+      <RootNavigator.Navigator
+        mode=`modal headerMode=`none initialRouteName="Screen">
+        <RootNavigator.Screen name="Home" component=Home.make />
+        <RootNavigator.Screen name="Cadastro" component=Cadastro.make />
+      </RootNavigator.Navigator>
+    </React.Suspense>
+  </ReasonRelay.Context.Provider>;
