@@ -6,7 +6,7 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
   (operation, variables, _cacheConfig) =>
     Fetch.(
       fetchWithInit(
-        "http://192.168.0.100:3000/graphql",
+        "http://ec2-3-82-204-231.compute-1.amazonaws.com/graphql",
         RequestInit.make(
           ~method_=Post,
           ~body=

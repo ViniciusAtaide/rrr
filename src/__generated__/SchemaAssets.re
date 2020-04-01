@@ -3,17 +3,15 @@
  * ENUMS
  * Helpers for wrapping/unwrapping enums.
  */
-module Enum_UsersOrderBy: {
+module Enum_PhonesOrderBy: {
   type t = [
     | `NATURAL
-    | `ID_ASC
-    | `ID_DESC
-    | `NAME_ASC
-    | `NAME_DESC
-    | `EMAIL_ASC
-    | `EMAIL_DESC
-    | `PASSWORD_ASC
-    | `PASSWORD_DESC
+    | `_ID_ASC
+    | `_ID_DESC
+    | `NUMBER_ASC
+    | `NUMBER_DESC
+    | `PLACE_ID_ASC
+    | `PLACE_ID_DESC
     | `PRIMARY_KEY_ASC
     | `PRIMARY_KEY_DESC
     | `FUTURE_ADDED_VALUE__
@@ -26,14 +24,12 @@ module Enum_UsersOrderBy: {
 } = {
   type t = [
     | `NATURAL
-    | `ID_ASC
-    | `ID_DESC
-    | `NAME_ASC
-    | `NAME_DESC
-    | `EMAIL_ASC
-    | `EMAIL_DESC
-    | `PASSWORD_ASC
-    | `PASSWORD_DESC
+    | `_ID_ASC
+    | `_ID_DESC
+    | `NUMBER_ASC
+    | `NUMBER_DESC
+    | `PLACE_ID_ASC
+    | `PLACE_ID_DESC
     | `PRIMARY_KEY_ASC
     | `PRIMARY_KEY_DESC
     | `FUTURE_ADDED_VALUE__
@@ -46,14 +42,12 @@ module Enum_UsersOrderBy: {
   let unwrap = wrapped =>
     switch (wrapped |> __unwrap) {
     | "NATURAL" => `NATURAL
-    | "ID_ASC" => `ID_ASC
-    | "ID_DESC" => `ID_DESC
-    | "NAME_ASC" => `NAME_ASC
-    | "NAME_DESC" => `NAME_DESC
-    | "EMAIL_ASC" => `EMAIL_ASC
-    | "EMAIL_DESC" => `EMAIL_DESC
-    | "PASSWORD_ASC" => `PASSWORD_ASC
-    | "PASSWORD_DESC" => `PASSWORD_DESC
+    | "_ID_ASC" => `_ID_ASC
+    | "_ID_DESC" => `_ID_DESC
+    | "NUMBER_ASC" => `NUMBER_ASC
+    | "NUMBER_DESC" => `NUMBER_DESC
+    | "PLACE_ID_ASC" => `PLACE_ID_ASC
+    | "PLACE_ID_DESC" => `PLACE_ID_DESC
     | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
     | "PRIMARY_KEY_DESC" => `PRIMARY_KEY_DESC
     | _ => `FUTURE_ADDED_VALUE__
@@ -63,14 +57,170 @@ module Enum_UsersOrderBy: {
     (
       switch (t) {
       | `NATURAL => "NATURAL"
-      | `ID_ASC => "ID_ASC"
-      | `ID_DESC => "ID_DESC"
+      | `_ID_ASC => "_ID_ASC"
+      | `_ID_DESC => "_ID_DESC"
+      | `NUMBER_ASC => "NUMBER_ASC"
+      | `NUMBER_DESC => "NUMBER_DESC"
+      | `PLACE_ID_ASC => "PLACE_ID_ASC"
+      | `PLACE_ID_DESC => "PLACE_ID_DESC"
+      | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"
+      | `PRIMARY_KEY_DESC => "PRIMARY_KEY_DESC"
+      | `FUTURE_ADDED_VALUE__ => ""
+      }
+    )
+    |> __wrap;
+
+  let toString = t => t |> wrap |> __unwrap;
+  let fromString = str => str |> __wrap |> unwrap;
+};
+
+module Enum_PlacesOrderBy: {
+  type t = [
+    | `NATURAL
+    | `_ID_ASC
+    | `_ID_DESC
+    | `LATITUDE_ASC
+    | `LATITUDE_DESC
+    | `LONGITUDE_ASC
+    | `LONGITUDE_DESC
+    | `NAME_ASC
+    | `NAME_DESC
+    | `EMAIL_ASC
+    | `EMAIL_DESC
+    | `PRIMARY_KEY_ASC
+    | `PRIMARY_KEY_DESC
+    | `FUTURE_ADDED_VALUE__
+  ];
+  type wrapped;
+  let unwrap: wrapped => t;
+  let wrap: t => wrapped;
+  let toString: t => string;
+  let fromString: string => t;
+} = {
+  type t = [
+    | `NATURAL
+    | `_ID_ASC
+    | `_ID_DESC
+    | `LATITUDE_ASC
+    | `LATITUDE_DESC
+    | `LONGITUDE_ASC
+    | `LONGITUDE_DESC
+    | `NAME_ASC
+    | `NAME_DESC
+    | `EMAIL_ASC
+    | `EMAIL_DESC
+    | `PRIMARY_KEY_ASC
+    | `PRIMARY_KEY_DESC
+    | `FUTURE_ADDED_VALUE__
+  ];
+  type wrapped;
+
+  external __unwrap: wrapped => string = "%identity";
+  external __wrap: string => wrapped = "%identity";
+
+  let unwrap = wrapped =>
+    switch (wrapped |> __unwrap) {
+    | "NATURAL" => `NATURAL
+    | "_ID_ASC" => `_ID_ASC
+    | "_ID_DESC" => `_ID_DESC
+    | "LATITUDE_ASC" => `LATITUDE_ASC
+    | "LATITUDE_DESC" => `LATITUDE_DESC
+    | "LONGITUDE_ASC" => `LONGITUDE_ASC
+    | "LONGITUDE_DESC" => `LONGITUDE_DESC
+    | "NAME_ASC" => `NAME_ASC
+    | "NAME_DESC" => `NAME_DESC
+    | "EMAIL_ASC" => `EMAIL_ASC
+    | "EMAIL_DESC" => `EMAIL_DESC
+    | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
+    | "PRIMARY_KEY_DESC" => `PRIMARY_KEY_DESC
+    | _ => `FUTURE_ADDED_VALUE__
+    };
+
+  let wrap = t =>
+    (
+      switch (t) {
+      | `NATURAL => "NATURAL"
+      | `_ID_ASC => "_ID_ASC"
+      | `_ID_DESC => "_ID_DESC"
+      | `LATITUDE_ASC => "LATITUDE_ASC"
+      | `LATITUDE_DESC => "LATITUDE_DESC"
+      | `LONGITUDE_ASC => "LONGITUDE_ASC"
+      | `LONGITUDE_DESC => "LONGITUDE_DESC"
       | `NAME_ASC => "NAME_ASC"
       | `NAME_DESC => "NAME_DESC"
       | `EMAIL_ASC => "EMAIL_ASC"
       | `EMAIL_DESC => "EMAIL_DESC"
-      | `PASSWORD_ASC => "PASSWORD_ASC"
-      | `PASSWORD_DESC => "PASSWORD_DESC"
+      | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"
+      | `PRIMARY_KEY_DESC => "PRIMARY_KEY_DESC"
+      | `FUTURE_ADDED_VALUE__ => ""
+      }
+    )
+    |> __wrap;
+
+  let toString = t => t |> wrap |> __unwrap;
+  let fromString = str => str |> __wrap |> unwrap;
+};
+
+module Enum_UsersOrderBy: {
+  type t = [
+    | `NATURAL
+    | `_ID_ASC
+    | `_ID_DESC
+    | `NAME_ASC
+    | `NAME_DESC
+    | `EMAIL_ASC
+    | `EMAIL_DESC
+    | `PRIMARY_KEY_ASC
+    | `PRIMARY_KEY_DESC
+    | `FUTURE_ADDED_VALUE__
+  ];
+  type wrapped;
+  let unwrap: wrapped => t;
+  let wrap: t => wrapped;
+  let toString: t => string;
+  let fromString: string => t;
+} = {
+  type t = [
+    | `NATURAL
+    | `_ID_ASC
+    | `_ID_DESC
+    | `NAME_ASC
+    | `NAME_DESC
+    | `EMAIL_ASC
+    | `EMAIL_DESC
+    | `PRIMARY_KEY_ASC
+    | `PRIMARY_KEY_DESC
+    | `FUTURE_ADDED_VALUE__
+  ];
+  type wrapped;
+
+  external __unwrap: wrapped => string = "%identity";
+  external __wrap: string => wrapped = "%identity";
+
+  let unwrap = wrapped =>
+    switch (wrapped |> __unwrap) {
+    | "NATURAL" => `NATURAL
+    | "_ID_ASC" => `_ID_ASC
+    | "_ID_DESC" => `_ID_DESC
+    | "NAME_ASC" => `NAME_ASC
+    | "NAME_DESC" => `NAME_DESC
+    | "EMAIL_ASC" => `EMAIL_ASC
+    | "EMAIL_DESC" => `EMAIL_DESC
+    | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
+    | "PRIMARY_KEY_DESC" => `PRIMARY_KEY_DESC
+    | _ => `FUTURE_ADDED_VALUE__
+    };
+
+  let wrap = t =>
+    (
+      switch (t) {
+      | `NATURAL => "NATURAL"
+      | `_ID_ASC => "_ID_ASC"
+      | `_ID_DESC => "_ID_DESC"
+      | `NAME_ASC => "NAME_ASC"
+      | `NAME_DESC => "NAME_DESC"
+      | `EMAIL_ASC => "EMAIL_ASC"
+      | `EMAIL_DESC => "EMAIL_DESC"
       | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"
       | `PRIMARY_KEY_DESC => "PRIMARY_KEY_DESC"
       | `FUTURE_ADDED_VALUE__ => ""

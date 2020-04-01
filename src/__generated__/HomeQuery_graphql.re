@@ -4,6 +4,7 @@ module Unions = {};
 
 module Types = {
   type node = {
+    _id: int,
     email: string,
     name: string,
   };
@@ -53,49 +54,91 @@ var v0 = [
   {
     "kind": "LinkedField",
     "alias": null,
-    "name": "allUsers",
+    "name": "edges",
     "storageKey": null,
     "args": null,
-    "concreteType": "UsersConnection",
-    "plural": false,
+    "concreteType": "UsersEdge",
+    "plural": true,
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
-        "name": "edges",
+        "name": "node",
         "storageKey": null,
         "args": null,
-        "concreteType": "UsersEdge",
-        "plural": true,
+        "concreteType": "User",
+        "plural": false,
         "selections": [
           {
-            "kind": "LinkedField",
+            "kind": "ScalarField",
             "alias": null,
-            "name": "node",
-            "storageKey": null,
+            "name": "_id",
             "args": null,
-            "concreteType": "User",
-            "plural": false,
-            "selections": [
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "name": "email",
-                "args": null,
-                "storageKey": null
-              },
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "name": "name",
-                "args": null,
-                "storageKey": null
-              }
-            ]
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "email",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "name",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "__typename",
+            "args": null,
+            "storageKey": null
           }
         ]
+      },
+      {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "cursor",
+        "args": null,
+        "storageKey": null
       }
     ]
+  },
+  {
+    "kind": "LinkedField",
+    "alias": null,
+    "name": "pageInfo",
+    "storageKey": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "endCursor",
+        "args": null,
+        "storageKey": null
+      },
+      {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "hasNextPage",
+        "args": null,
+        "storageKey": null
+      }
+    ]
+  }
+],
+v1 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 2147483647
   }
 ];
 return {
@@ -106,20 +149,62 @@ return {
     "type": "Query",
     "metadata": null,
     "argumentDefinitions": [],
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "kind": "LinkedField",
+        "alias": "allUsers",
+        "name": "__HomeQuery_allUsers_connection",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "UsersConnection",
+        "plural": false,
+        "selections": (v0/*: any*/)
+      }
+    ]
   },
   "operation": {
     "kind": "Operation",
     "name": "HomeQuery",
     "argumentDefinitions": [],
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "allUsers",
+        "storageKey": "allUsers(first:2147483647)",
+        "args": (v1/*: any*/),
+        "concreteType": "UsersConnection",
+        "plural": false,
+        "selections": (v0/*: any*/)
+      },
+      {
+        "kind": "LinkedHandle",
+        "alias": null,
+        "name": "allUsers",
+        "args": (v1/*: any*/),
+        "handle": "connection",
+        "key": "HomeQuery_allUsers",
+        "filters": null
+      }
+    ]
   },
   "params": {
     "operationKind": "query",
     "name": "HomeQuery",
     "id": null,
-    "text": "query HomeQuery {\n  allUsers {\n    edges {\n      node {\n        email\n        name\n      }\n    }\n  }\n}\n",
-    "metadata": {}
+    "text": "query HomeQuery {\n  allUsers(first: 2147483647) {\n    edges {\n      node {\n        _id\n        email\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "metadata": {
+      "connection": [
+        {
+          "count": null,
+          "cursor": null,
+          "direction": "forward",
+          "path": [
+            "allUsers"
+          ]
+        }
+      ]
+    }
   }
 };
 })() |}

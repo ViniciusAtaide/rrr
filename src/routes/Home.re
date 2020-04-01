@@ -1,9 +1,10 @@
 module Query = [%relay.query
   {|
   query HomeQuery {
-    allUsers {
+    allUsers(first: 2147483647) @connection(key: "HomeQuery_allUsers") {
       edges {
         node {
+          _id
           email
           name
         }
@@ -26,12 +27,12 @@ let make = (~navigation, ~route as _) => {
       <View>
         <View>
           {users.edges
-           ->Belt.Array.mapWithIndex((i, edge) =>
+           ->Belt.Array.map(edge =>
                switch (edge.node) {
                | Some(node) =>
-                 <View key={string_of_int(i)}>
+                 <View key={string_of_int(node._id)}>
                    <Text>
-                     {("Usuario: " ++ string_of_int(i + 1))->React.string}
+                     {("Usuario: " ++ string_of_int(node._id))->React.string}
                    </Text>
                    <Text> {("Nome: " ++ node.name)->React.string} </Text>
                    <Text> {("Email: " ++ node.email)->React.string} </Text>

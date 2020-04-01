@@ -9,7 +9,7 @@
     "in-source": true
   },
   "suffix": ".bs.js",
-  "ppx-flags": ["reason-relay/ppx"],
+  "ppx-flags": ["reason-relay/ppx", "bs-let/ppx"],
   "sources": [
     {
       "dir": "src",
@@ -21,6 +21,7 @@
     "reason-react-native",
     "reason-relay",
     "bs-fetch",
-    "reason-react-navigation"
+    "reason-react-navigation",
+    "reason-promise"
   ]
 }
