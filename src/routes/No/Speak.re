@@ -13,24 +13,24 @@ let styles =
         ),
       "txt":
         style(
+          ~fontFamily="Montserrat-SemiBold",
           ~color="#fff",
-          ~fontSize=24.,
+          ~fontSize=22.,
           ~paddingTop=20.->dp,
-          ~fontWeight=`_600,
           (),
         ),
       "txtBlk":
         style(
+          ~fontFamily="Montserrat-Bold",
           ~color="black",
           ~fontSize=24.,
           ~lineHeight=48.,
-          ~fontWeight=`_600,
           (),
         ),
       "txtGray":
         style(
+          ~fontFamily="Montserrat-Light",
           ~color="gray",
-          ~fontWeight=`_100,
           ~fontSize=24.,
           ~lineHeight=48.,
           (),
@@ -38,10 +38,16 @@ let styles =
       "inputWrapper": style(~marginVertical=2.5->dp, ~width=100.->pct, ()),
       "input": style(~backgroundColor="#fff", ~height=40.->dp, ()),
       "orange":
-        style(~color="rgb(223,63,42)", ~fontWeight=`_700, ~fontSize=24., ()),
+        style(
+          ~color="rgb(254,80,0)",
+          ~fontFamily="Montserrat-Bold",
+          ~fontSize=22.,
+          (),
+        ),
 
       "button":
         style(
+          ~fontFamily="Montserrat-SemiBold",
           ~backgroundColor="#fff",
           ~fontSize=28.,
           ~width=100.->pct,
@@ -50,7 +56,13 @@ let styles =
         ),
       "buttonWrapper": style(~flex=1., ~justifyContent=`flexEnd, ()),
       "errorMessage": style(~opacity=0., ()),
-      "errorMessageText": style(~fontSize=18., ~color="rgb(223,63,42)", ()),
+      "errorMessageText":
+        style(
+          ~fontSize=16.,
+          ~fontFamily="Montserrat-SemiBold",
+          ~color="rgb(254,80,0)",
+          (),
+        ),
       "errorMessageActive": style(~opacity=1., ()),
       "wrapper": style(~flex=1.3, ~justifyContent=`flexEnd, ()),
     })
@@ -75,7 +87,7 @@ let make = (~navigation as _, ~route as _) => {
   let (errors, setErrors) = useState(() => Set.String.empty);
   let (errorNoWhats, setErrorNoWhats) = useState(() => false);
 
-  React.useLayoutEffect2(
+  React.useEffect2(
     () => {
       if (name === "") {
         setErrors(e => e->Set.String.add(errorNoName));
@@ -115,13 +127,9 @@ let make = (~navigation as _, ~route as _) => {
                  ? Linking.openURL(url) |> then_(() => resolve(true))
                  : reject(raise(Not_found))
              )
-          |> then_(_ => {
-               Js.log("Opened");
-               resolve();
-             })
           |> catch(_ => {
                setErrorNoWhats(_ => true);
-               resolve();
+               resolve(false);
              })
         )
         |> ignore

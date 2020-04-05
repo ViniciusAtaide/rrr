@@ -10,6 +10,8 @@ module Enum_PhonesOrderBy: {
     | `_ID_DESC
     | `NUMBER_ASC
     | `NUMBER_DESC
+    | `IS_WHATS_ASC
+    | `IS_WHATS_DESC
     | `PLACE_ID_ASC
     | `PLACE_ID_DESC
     | `PRIMARY_KEY_ASC
@@ -28,6 +30,8 @@ module Enum_PhonesOrderBy: {
     | `_ID_DESC
     | `NUMBER_ASC
     | `NUMBER_DESC
+    | `IS_WHATS_ASC
+    | `IS_WHATS_DESC
     | `PLACE_ID_ASC
     | `PLACE_ID_DESC
     | `PRIMARY_KEY_ASC
@@ -46,6 +50,8 @@ module Enum_PhonesOrderBy: {
     | "_ID_DESC" => `_ID_DESC
     | "NUMBER_ASC" => `NUMBER_ASC
     | "NUMBER_DESC" => `NUMBER_DESC
+    | "IS_WHATS_ASC" => `IS_WHATS_ASC
+    | "IS_WHATS_DESC" => `IS_WHATS_DESC
     | "PLACE_ID_ASC" => `PLACE_ID_ASC
     | "PLACE_ID_DESC" => `PLACE_ID_DESC
     | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
@@ -61,6 +67,8 @@ module Enum_PhonesOrderBy: {
       | `_ID_DESC => "_ID_DESC"
       | `NUMBER_ASC => "NUMBER_ASC"
       | `NUMBER_DESC => "NUMBER_DESC"
+      | `IS_WHATS_ASC => "IS_WHATS_ASC"
+      | `IS_WHATS_DESC => "IS_WHATS_DESC"
       | `PLACE_ID_ASC => "PLACE_ID_ASC"
       | `PLACE_ID_DESC => "PLACE_ID_DESC"
       | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"
@@ -170,6 +178,8 @@ module Enum_UsersOrderBy: {
     | `NAME_DESC
     | `EMAIL_ASC
     | `EMAIL_DESC
+    | `CPF_CNPJ_ASC
+    | `CPF_CNPJ_DESC
     | `PRIMARY_KEY_ASC
     | `PRIMARY_KEY_DESC
     | `FUTURE_ADDED_VALUE__
@@ -188,6 +198,8 @@ module Enum_UsersOrderBy: {
     | `NAME_DESC
     | `EMAIL_ASC
     | `EMAIL_DESC
+    | `CPF_CNPJ_ASC
+    | `CPF_CNPJ_DESC
     | `PRIMARY_KEY_ASC
     | `PRIMARY_KEY_DESC
     | `FUTURE_ADDED_VALUE__
@@ -206,6 +218,8 @@ module Enum_UsersOrderBy: {
     | "NAME_DESC" => `NAME_DESC
     | "EMAIL_ASC" => `EMAIL_ASC
     | "EMAIL_DESC" => `EMAIL_DESC
+    | "CPF_CNPJ_ASC" => `CPF_CNPJ_ASC
+    | "CPF_CNPJ_DESC" => `CPF_CNPJ_DESC
     | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
     | "PRIMARY_KEY_DESC" => `PRIMARY_KEY_DESC
     | _ => `FUTURE_ADDED_VALUE__
@@ -221,6 +235,8 @@ module Enum_UsersOrderBy: {
       | `NAME_DESC => "NAME_DESC"
       | `EMAIL_ASC => "EMAIL_ASC"
       | `EMAIL_DESC => "EMAIL_DESC"
+      | `CPF_CNPJ_ASC => "CPF_CNPJ_ASC"
+      | `CPF_CNPJ_DESC => "CPF_CNPJ_DESC"
       | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"
       | `PRIMARY_KEY_DESC => "PRIMARY_KEY_DESC"
       | `FUTURE_ADDED_VALUE__ => ""

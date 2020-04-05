@@ -1,25 +1,41 @@
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
-      "bg": style(~backgroundColor="rgb(36, 37, 36)", ()),
+      "bg": style(~backgroundColor="rgb(36, 37, 36)", ~height=100.->pct, ()),
       "container":
         style(
           ~alignItems=`flexStart,
-          ~justifyContent=`center,
-          ~height=100.->pct,
-          ~padding=25.->dp,
+          ~justifyContent=`spaceBetween,
+          ~paddingHorizontal=25.->dp,
+          ~paddingVertical=60.->dp,
+          ~flex=1.,
           (),
         ),
       "txt":
         style(
+          ~fontFamily="Montserrat-SemiBold",
           ~color="#fff",
-          ~fontSize=28.,
-          ~paddingTop=20.->dp,
+          ~fontSize=24.,
           ~fontWeight=`_600,
           (),
         ),
       "orange":
-        style(~color="rgb(223,63,42)", ~fontWeight=`_700, ~fontSize=28., ()),
+        style(
+          ~color="rgb(254,80,0)",
+          ~paddingTop=40.->dp,
+          ~fontFamily="Montserrat-Bold",
+          ~fontSize=22.,
+          (),
+        ),
+      "center":
+        style(
+          ~justifyContent=`spaceAround,
+          ~alignItems=`center,
+          ~width=100.->pct,
+          (),
+        ),
+      "signature": style(~width=150.->dp, ~height=90.->dp, ()),
+      "figure": style(~width=150.->dp, ~height=50.->dp, ()),
     })
   );
 
@@ -52,6 +68,20 @@ let make = (~navigation, ~route as _) => {
             {js|Fazer elogios ou reclamações|js}->React.string
           </Text>
         </TouchableOpacity>
+        <View style={styles##center}>
+          <Image
+            source={Image.Source.fromRequired(
+              Packager.require("../../images/signature.png"),
+            )}
+            style={styles##signature}
+          />
+          <Image
+            source={Image.Source.fromRequired(
+              Packager.require("../../images/30years.png"),
+            )}
+            style={styles##figure}
+          />
+        </View>
       </View>
     </View>
   );

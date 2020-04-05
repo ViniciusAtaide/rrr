@@ -7,6 +7,7 @@ module Types = {
     _id: option(int),
     name: string,
     email: string,
+    cpfCnpj: string,
   };
   type createUserInput = {
     clientMutationId: option(string),

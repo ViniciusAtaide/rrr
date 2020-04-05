@@ -58,6 +58,7 @@ let commit = (~environment, ~name, ~email, ~navigation) => {
           _id: None,
           name,
           email,
+          cpfCnpj: "",
         },
       },
     },
