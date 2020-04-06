@@ -68,8 +68,7 @@ let make = (~navigation as _, ~route as _) => {
   );
 
   let submit = _ => {
-    ()//     |> then_(user =>
-      //          if (user) {
+    ()//          if (user) {
       //            navigation->RootNavigator.Navigation.navigate("Subscribe");
       //            resolve();
       //          } else {
@@ -81,8 +80,9 @@ let make = (~navigation as _, ~route as _) => {
       //          }
       //        )
       //   )
-      ; //     Query.fetch(~environment, ~variables={cpfCnpj: cpfcnpj})
- //   Js.Promise.(
+      //   Js.Promise.(
+      ; //     |> then_(user =>
+ //     Query.fetch(~environment, ~variables={cpfCnpj: cpfcnpj})
       //   |> ignore;
   };
 
