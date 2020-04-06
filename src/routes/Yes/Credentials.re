@@ -99,18 +99,7 @@ let make = (~navigation, ~route as _) => {
   let submit = _ => {
     Js.Promise.(
       Query.fetch(~environment, ~variables={cpfCnpj: cpfcnpj})
-      |> then_(user =>
-           if (user) {
-             navigation->RootNavigator.Navigation.navigate("Subscribe");
-             resolve(true);
-           } else {
-             ReactNative.ToastAndroid.show(
-               "CPF não encontrado, cadastre-se",
-               ReactNative.ToastAndroid.long,
-             );
-             resolve(false);
-           }
-         )
+      |> then_(user => resolve(true))
     );
   };
 
