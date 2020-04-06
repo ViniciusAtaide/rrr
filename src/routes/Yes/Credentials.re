@@ -11,6 +11,7 @@ module Query = [%relay.query
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
+      "wrapper": style(~flex=1., ~justifyContent=`flexEnd, ()),
       "bg": style(~backgroundColor="rgb(36, 37, 36)", ()),
       "container":
         style(
@@ -29,22 +30,6 @@ let styles =
           ~fontWeight=`_600,
           (),
         ),
-      "txtBlk":
-        style(
-          ~fontFamily="Montserrat",
-          ~color="black",
-          ~fontSize=24.,
-          ~lineHeight=48.,
-          (),
-        ),
-      "txtLight":
-        style(
-          ~fontFamily="Montserrat-Light",
-          ~color="black",
-          ~fontSize=24.,
-          ~lineHeight=48.,
-          (),
-        ),
       "orange":
         style(
           ~color="rgb(254,80,0)",
@@ -59,28 +44,14 @@ let styles =
           ~height=40.->dp,
           (),
         ),
-
-      "wrapper": style(~flex=1., ~justifyContent=`flexEnd, ()),
-      "buttonWrapper":
-        style(~flex=1., ~width=100.->pct, ~justifyContent=`flexEnd, ()),
-      "button":
-        style(
-          ~fontFamily="Montserrat-SemiBold",
-          ~backgroundColor="#fff",
-          ~fontSize=28.,
-          ~width=100.->pct,
-          ~alignItems=`center,
-          (),
-        ),
     })
   );
 
 [@react.component]
-let make = (~navigation, ~route as _) => {
+let make = (~navigation as _, ~route as _) => {
   open Belt;
 
   let errorNoCpf = {j|CPF ou CNPJ obrigatórios|j};
-  let environment = ReasonRelay.useEnvironmentFromContext();
 
   let (cpfcnpj, setCpfcnpj) = React.useState(_ => "");
   let (errors, setErrors) = React.useState(() => Set.String.empty);
@@ -97,21 +68,22 @@ let make = (~navigation, ~route as _) => {
   );
 
   let submit = _ => {
-    Js.Promise.(
-      Query.fetch(~environment, ~variables={cpfCnpj: cpfcnpj})
-      |> then_(user =>
-           if (user) {
-             navigation->RootNavigator.Navigation.navigate("Subscribe");
-             resolve(true);
-           } else {
-             ReactNative.ToastAndroid.show(
-               "CPF não encontrado, cadastre-se",
-               ReactNative.ToastAndroid.long,
-             );
-             resolve(false);
-           }
-         )
-    );
+    ()//     Query.fetch(~environment, ~variables={cpfCnpj: cpfcnpj})
+      //     |> then_(user =>
+      //          if (user) {
+      //            navigation->RootNavigator.Navigation.navigate("Subscribe");
+      //            resolve();
+      //          } else {
+      //            ReactNative.ToastAndroid.show(
+      //              "CPF não encontrado, cadastre-se",
+      //              ReactNative.ToastAndroid.long,
+      //            );
+      //            resolve();
+      //          }
+      //        )
+      //   )
+      ; //   Js.Promise.(
+      //   |> ignore;
   };
 
   ReactNative.(
@@ -132,36 +104,7 @@ let make = (~navigation, ~route as _) => {
             style={styles##input}
           />
         </SafeAreaView>
-        <View style={styles##buttonWrapper}>
-          <View style={styles##button}>
-            <TouchableNativeFeedback
-              background={TouchableNativeFeedback.Background.ripple(
-                "#000",
-                false,
-              )}
-              onPress={_ =>
-                errors->Set.String.isEmpty
-                  ? submit() |> ignore
-                  : ToastAndroid.(
-                      showWithGravityAndOffset(
-                        {j|CPF/CNPJ Obrigatórios|j},
-                        long,
-                        bottom,
-                        ~xOffset=25.,
-                        ~yOffset=50.,
-                      )
-                    )
-              }>
-              <Text
-                style={Style.listOption([
-                  errors->Set.String.isEmpty
-                    ? Some(styles##txtBlk) : Some(styles##txtLight),
-                ])}>
-                "CONTINUAR"->React.string
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        </View>
+        <SubmitButton errors submit />
       </KeyboardAvoidingView>
     </View>
   );

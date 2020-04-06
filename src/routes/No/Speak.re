@@ -102,15 +102,12 @@ let make = (~navigation as _, ~route as _) => {
       };
 
       Js.log(errors->Set.String.isEmpty);
+      switch (email |> Js.String.match(emailRegexp)) {
+      | Some(_) => setErrors(e => e->Set.String.remove(errorEmailFormat))
+      | None => setErrors(e => e->Set.String.add(errorEmailFormat))
+      };
 
-      Some(
-        _ =>
-          switch (email |> Js.String.match(emailRegexp)) {
-          | Some(_email) =>
-            setErrors(e => e->Set.String.remove(errorEmailFormat))
-          | None => setErrors(e => e->Set.String.add(errorEmailFormat))
-          },
-      );
+      None;
     },
     (name, email),
   );
@@ -195,6 +192,7 @@ let make = (~navigation as _, ~route as _) => {
           </View>
         </View>
       </SafeAreaView>
+      <SubmitButton errors />
       <View style={styles##buttonWrapper}>
         <View style={styles##button}>
           <TouchableNativeFeedback

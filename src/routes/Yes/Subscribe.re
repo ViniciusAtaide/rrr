@@ -285,18 +285,7 @@ let make = (~navigation, ~route as _) => {
              : React.null}
         </View>
       </View>
-      <View style={styles##buttonWrapper}>
-        <View style={styles##button}>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Background.ripple(
-              "#000",
-              false,
-            )}
-            onPress=submit>
-            <Text style={styles##txtBlk}> "CONTINUAR"->React.string </Text>
-          </TouchableNativeFeedback>
-        </View>
-      </View>
+      <SubmitButton errors submit />
     </View>
   </View>;
 };
