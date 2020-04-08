@@ -1,15 +1,15 @@
 open ReactNative;
-open Belt;
 
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
-      "buttonWrapper":
-        style(~flex=1., ~width=100.->pct, ~justifyContent=`flexEnd, ()),
+      "buttonWrapper": style(~width=100.->pct, ~justifyContent=`flexEnd, ()),
       "button":
         style(
           ~fontFamily="Montserrat-SemiBold",
           ~backgroundColor="#fff",
+          ~borderColor="black",
+          ~borderTopWidth=1.,
           ~fontSize=28.,
           ~width=100.->pct,
           ~alignItems=`center,
@@ -35,29 +35,16 @@ let styles =
   );
 
 [@react.component]
-let make = (~errors, ~submit=?) => {
-  // let environment = ReasonRelay.useEnvironmentFromContext();
+let make = (~submit, ~valid) => {
   <View style={styles##buttonWrapper}>
     <View style={styles##button}>
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Background.ripple("#000", false)}
-        onPress={_ =>
-          errors->Set.String.isEmpty
-            ? submit |> ignore
-            : ToastAndroid.(
-                showWithGravityAndOffset(
-                  {j|CPF/CNPJ Obrigatórios|j},
-                  long,
-                  bottom,
-                  ~xOffset=25.,
-                  ~yOffset=50.,
-                )
-              )
-        }>
+        onPress={_ => submit()}>
         <Text
           style={Style.listOption([
-            errors->Set.String.isEmpty
-              ? Some(styles##txtBlk) : Some(styles##txtLight),
+            Some(styles##txtBlk),
+            valid() ? None : Some(styles##txtLight),
           ])}>
           "CONTINUAR"->React.string
         </Text>

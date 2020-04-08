@@ -91,6 +91,8 @@ module Enum_PlacesOrderBy: {
     | `LATITUDE_DESC
     | `LONGITUDE_ASC
     | `LONGITUDE_DESC
+    | `ADDRESS_ASC
+    | `ADDRESS_DESC
     | `NAME_ASC
     | `NAME_DESC
     | `EMAIL_ASC
@@ -113,6 +115,8 @@ module Enum_PlacesOrderBy: {
     | `LATITUDE_DESC
     | `LONGITUDE_ASC
     | `LONGITUDE_DESC
+    | `ADDRESS_ASC
+    | `ADDRESS_DESC
     | `NAME_ASC
     | `NAME_DESC
     | `EMAIL_ASC
@@ -135,6 +139,8 @@ module Enum_PlacesOrderBy: {
     | "LATITUDE_DESC" => `LATITUDE_DESC
     | "LONGITUDE_ASC" => `LONGITUDE_ASC
     | "LONGITUDE_DESC" => `LONGITUDE_DESC
+    | "ADDRESS_ASC" => `ADDRESS_ASC
+    | "ADDRESS_DESC" => `ADDRESS_DESC
     | "NAME_ASC" => `NAME_ASC
     | "NAME_DESC" => `NAME_DESC
     | "EMAIL_ASC" => `EMAIL_ASC
@@ -154,6 +160,8 @@ module Enum_PlacesOrderBy: {
       | `LATITUDE_DESC => "LATITUDE_DESC"
       | `LONGITUDE_ASC => "LONGITUDE_ASC"
       | `LONGITUDE_DESC => "LONGITUDE_DESC"
+      | `ADDRESS_ASC => "ADDRESS_ASC"
+      | `ADDRESS_DESC => "ADDRESS_DESC"
       | `NAME_ASC => "NAME_ASC"
       | `NAME_DESC => "NAME_DESC"
       | `EMAIL_ASC => "EMAIL_ASC"
@@ -178,6 +186,10 @@ module Enum_UsersOrderBy: {
     | `NAME_DESC
     | `EMAIL_ASC
     | `EMAIL_DESC
+    | `PHONE_ASC
+    | `PHONE_DESC
+    | `ISWHATS_ASC
+    | `ISWHATS_DESC
     | `CPF_CNPJ_ASC
     | `CPF_CNPJ_DESC
     | `PRIMARY_KEY_ASC
@@ -198,6 +210,10 @@ module Enum_UsersOrderBy: {
     | `NAME_DESC
     | `EMAIL_ASC
     | `EMAIL_DESC
+    | `PHONE_ASC
+    | `PHONE_DESC
+    | `ISWHATS_ASC
+    | `ISWHATS_DESC
     | `CPF_CNPJ_ASC
     | `CPF_CNPJ_DESC
     | `PRIMARY_KEY_ASC
@@ -218,6 +234,10 @@ module Enum_UsersOrderBy: {
     | "NAME_DESC" => `NAME_DESC
     | "EMAIL_ASC" => `EMAIL_ASC
     | "EMAIL_DESC" => `EMAIL_DESC
+    | "PHONE_ASC" => `PHONE_ASC
+    | "PHONE_DESC" => `PHONE_DESC
+    | "ISWHATS_ASC" => `ISWHATS_ASC
+    | "ISWHATS_DESC" => `ISWHATS_DESC
     | "CPF_CNPJ_ASC" => `CPF_CNPJ_ASC
     | "CPF_CNPJ_DESC" => `CPF_CNPJ_DESC
     | "PRIMARY_KEY_ASC" => `PRIMARY_KEY_ASC
@@ -235,6 +255,10 @@ module Enum_UsersOrderBy: {
       | `NAME_DESC => "NAME_DESC"
       | `EMAIL_ASC => "EMAIL_ASC"
       | `EMAIL_DESC => "EMAIL_DESC"
+      | `PHONE_ASC => "PHONE_ASC"
+      | `PHONE_DESC => "PHONE_DESC"
+      | `ISWHATS_ASC => "ISWHATS_ASC"
+      | `ISWHATS_DESC => "ISWHATS_DESC"
       | `CPF_CNPJ_ASC => "CPF_CNPJ_ASC"
       | `CPF_CNPJ_DESC => "CPF_CNPJ_DESC"
       | `PRIMARY_KEY_ASC => "PRIMARY_KEY_ASC"

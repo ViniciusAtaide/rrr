@@ -87,7 +87,7 @@ let make = (~navigation, ~route as _) => {
              ~xOffset=25.,
              ~yOffset=50.,
            );
-           navigation->RootNavigator.Navigation.navigate("Social");
+           navigation->Navigators.RootNavigator.Navigation.navigate("Social");
            resolve();
          })
       |> catch(_ => {

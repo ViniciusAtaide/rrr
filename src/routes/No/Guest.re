@@ -49,7 +49,7 @@ let make = (~navigation, ~route as _) => {
         </Text>
         <TouchableOpacity
           onPress={_ =>
-            navigation->RootNavigator.Navigation.navigate("Speak")
+            navigation->Navigators.RootNavigator.Navigation.navigate("Speak")
           }>
           <Text style={styles##txt}>
             "Falar com um atendente"->React.string
@@ -62,7 +62,9 @@ let make = (~navigation, ~route as _) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={_ =>
-            navigation->RootNavigator.Navigation.navigate("Contact")
+            navigation->Navigators.RootNavigator.Navigation.navigate(
+              "Contact",
+            )
           }>
           <Text style={styles##txt}>
             {js|Fazer elogios ou reclamações|js}->React.string

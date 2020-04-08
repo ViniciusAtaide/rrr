@@ -3,31 +3,32 @@
 module Unions = {};
 
 module Types = {
-  type userInput = {
+  type userPatch = {
     _id: option(int),
     name: option(string),
     email: option(string),
     phone: option(string),
     iswhats: option(bool),
+    cpfCnpj: option(string),
+  };
+  type updateUserByCpfCnpjInput = {
+    clientMutationId: option(string),
+    userPatch,
     cpfCnpj: string,
   };
-  type createUserInput = {
-    clientMutationId: option(string),
-    user: userInput,
-  };
   type user = {_id: int};
-  type createUser = {user: option(user)};
+  type updateUserByCpfCnpj = {user: option(user)};
 };
 
 open Types;
 
-type response = {createUser: option(createUser)};
-type variables = {input: createUserInput};
+type response = {updateUserByCpfCnpj: option(updateUserByCpfCnpj)};
+type variables = {input: updateUserByCpfCnpjInput};
 
 module Internal = {
   type wrapResponseRaw;
   let wrapResponseConverter: Js.Dict.t(Js.Dict.t(Js.Dict.t(string))) = [%raw
-    {| {"__root":{"createUser":{"n":""},"createUser_user":{"n":""}}} |}
+    {| {"__root":{"updateUserByCpfCnpj":{"n":""},"updateUserByCpfCnpj_user":{"n":""}}} |}
   ];
   let wrapResponseConverterMap = ();
   let convertWrapResponse = v =>
@@ -40,7 +41,7 @@ module Internal = {
 
   type responseRaw;
   let responseConverter: Js.Dict.t(Js.Dict.t(Js.Dict.t(string))) = [%raw
-    {| {"__root":{"createUser":{"n":""},"createUser_user":{"n":""}}} |}
+    {| {"__root":{"updateUserByCpfCnpj":{"n":""},"updateUserByCpfCnpj_user":{"n":""}}} |}
   ];
   let responseConverterMap = ();
   let convertResponse = v =>
@@ -52,7 +53,7 @@ module Internal = {
       );
 
   let variablesConverter: Js.Dict.t(Js.Dict.t(Js.Dict.t(string))) = [%raw
-    {| {"__root":{"input":{"r":"CreateUserInput"}},"UserInput":{"_id":{"n":""},"name":{"n":""},"email":{"n":""},"phone":{"n":""},"iswhats":{"n":""}},"CreateUserInput":{"clientMutationId":{"n":""},"user":{"r":"UserInput"}}} |}
+    {| {"__root":{"input":{"r":"UpdateUserByCpfCnpjInput"}},"UserPatch":{"_id":{"n":""},"name":{"n":""},"email":{"n":""},"phone":{"n":""},"iswhats":{"n":""},"cpfCnpj":{"n":""}},"UpdateUserByCpfCnpjInput":{"clientMutationId":{"n":""},"userPatch":{"r":"UserPatch"}}} |}
   ];
   let variablesConverterMap = ();
   let convertVariables = v =>
@@ -74,7 +75,7 @@ var v0 = [
   {
     "kind": "LocalArgument",
     "name": "input",
-    "type": "CreateUserInput!",
+    "type": "UpdateUserByCpfCnpjInput!",
     "defaultValue": null
   }
 ],
@@ -82,7 +83,7 @@ v1 = [
   {
     "kind": "LinkedField",
     "alias": null,
-    "name": "createUser",
+    "name": "updateUserByCpfCnpj",
     "storageKey": null,
     "args": [
       {
@@ -91,7 +92,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "CreateUserPayload",
+    "concreteType": "UpdateUserPayload",
     "plural": false,
     "selections": [
       {
@@ -119,7 +120,7 @@ return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "CreateUserMutation",
+    "name": "UpdateUserMutation",
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": (v0/*: any*/),
@@ -127,15 +128,15 @@ return {
   },
   "operation": {
     "kind": "Operation",
-    "name": "CreateUserMutation",
+    "name": "UpdateUserMutation",
     "argumentDefinitions": (v0/*: any*/),
     "selections": (v1/*: any*/)
   },
   "params": {
     "operationKind": "mutation",
-    "name": "CreateUserMutation",
+    "name": "UpdateUserMutation",
     "id": null,
-    "text": "mutation CreateUserMutation(\n  $input: CreateUserInput!\n) {\n  createUser(input: $input) {\n    user {\n      _id\n    }\n  }\n}\n",
+    "text": "mutation UpdateUserMutation(\n  $input: UpdateUserByCpfCnpjInput!\n) {\n  updateUserByCpfCnpj(input: $input) {\n    user {\n      _id\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

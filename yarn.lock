@@ -5442,6 +5442,18 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+re-debouncer@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/re-debouncer/-/re-debouncer-2.1.0.tgz#2eaf7994ba41590f4f80d4a363ae8905156b7dc1"
+  integrity sha512-Iy9BecWF9X4V6zXfL3ROZpKGkCnpzYdjG/j6NIBxQn7gEwO2DzED5BsbfRUiPeqr7C0tAD0HPHF6tYIcQFEnyA==
+
+re-formality@^4.0.0-beta.3:
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/re-formality/-/re-formality-4.0.0-beta.3.tgz#99a0cd822c61a54bcc8ef953282e45d8e6d79172"
+  integrity sha512-qzLNBHvI5kxOFxqDD9FQ5bj9mt5+HGJeUtZjgAUHkzoRCqRVOAWLKAHck2qXE9dPh6JBllqfLW/gsLvDfQhkyg==
+  dependencies:
+    re-debouncer "2.1.0"
+
 react-devtools-core@^3.6.3:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.6.3.tgz#977d95b684c6ad28205f0c62e1e12c5f16675814"
@@ -5491,6 +5503,11 @@ react-native-gesture-handler@^1.6.1:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
+
+react-native-hide-with-keyboard@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-hide-with-keyboard/-/react-native-hide-with-keyboard-1.2.1.tgz#9e7b03832e8b2b18e999646dc25686487ce72974"
+  integrity sha512-O3aI0TkfHLaWO3bjO8bDXgOZ/R/K+Ca8CaXOyHJT71eQlyp2CnycUIa/qHUGkXbVpqjt0hZC7k+MUAer82UOaQ==
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"

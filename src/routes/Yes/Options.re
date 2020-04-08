@@ -127,7 +127,9 @@ let make = (~navigation, ~route as _) => {
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
             onPress={_ =>
-              navigation->RootNavigator.Navigation.navigate("Contact")
+              navigation->Navigators.RootNavigator.Navigation.navigate(
+                "Contact",
+              )
             }>
             <View style={styles##button}>
               <Text style={styles##txt}>

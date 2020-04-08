@@ -680,8 +680,9 @@ type Place implements Node {
   """
   nodeId: ID!
   _id: Int!
-  latitude: String!
-  longitude: String!
+  latitude: String
+  longitude: String
+  address: String
   name: String!
   email: String
 
@@ -747,6 +748,11 @@ input PlaceCondition {
   longitude: String
 
   """
+  Checks for equality with the object’s `address` field.
+  """
+  address: String
+
+  """
   Checks for equality with the object’s `name` field.
   """
   name: String
@@ -762,8 +768,9 @@ An input for mutations affecting `Place`
 """
 input PlaceInput {
   _id: Int
-  latitude: String!
-  longitude: String!
+  latitude: String
+  longitude: String
+  address: String
   name: String!
   email: String
 }
@@ -775,6 +782,7 @@ input PlacePatch {
   _id: Int
   latitude: String
   longitude: String
+  address: String
   name: String
   email: String
 }
@@ -830,6 +838,8 @@ enum PlacesOrderBy {
   LATITUDE_DESC
   LONGITUDE_ASC
   LONGITUDE_DESC
+  ADDRESS_ASC
+  ADDRESS_DESC
   NAME_ASC
   NAME_DESC
   EMAIL_ASC
@@ -1259,8 +1269,10 @@ type User implements Node {
   """
   nodeId: ID!
   _id: Int!
-  name: String!
-  email: String!
+  name: String
+  email: String
+  phone: String
+  iswhats: Boolean
   cpfCnpj: String!
 }
 
@@ -1284,6 +1296,16 @@ input UserCondition {
   email: String
 
   """
+  Checks for equality with the object’s `phone` field.
+  """
+  phone: String
+
+  """
+  Checks for equality with the object’s `iswhats` field.
+  """
+  iswhats: Boolean
+
+  """
   Checks for equality with the object’s `cpfCnpj` field.
   """
   cpfCnpj: String
@@ -1294,8 +1316,10 @@ An input for mutations affecting `User`
 """
 input UserInput {
   _id: Int
-  name: String!
-  email: String!
+  name: String
+  email: String
+  phone: String
+  iswhats: Boolean
   cpfCnpj: String!
 }
 
@@ -1306,6 +1330,8 @@ input UserPatch {
   _id: Int
   name: String
   email: String
+  phone: String
+  iswhats: Boolean
   cpfCnpj: String
 }
 
@@ -1360,6 +1386,10 @@ enum UsersOrderBy {
   NAME_DESC
   EMAIL_ASC
   EMAIL_DESC
+  PHONE_ASC
+  PHONE_DESC
+  ISWHATS_ASC
+  ISWHATS_DESC
   CPF_CNPJ_ASC
   CPF_CNPJ_DESC
   PRIMARY_KEY_ASC

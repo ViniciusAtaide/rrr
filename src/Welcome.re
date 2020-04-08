@@ -116,7 +116,9 @@ let make = (~navigation, ~route as _) => {
               true,
             )}
             onPress={_ =>
-              navigation->RootNavigator.Navigation.navigate("Guest")
+              navigation->Navigators.RootNavigator.Navigation.navigate(
+                "Guest",
+              )
             }>
             <View style={Style.list([styles##grayButton, styles##padding])}>
               <Text style={styles##buttonText}>
@@ -130,7 +132,9 @@ let make = (~navigation, ~route as _) => {
               true,
             )}
             onPress={_ =>
-              navigation->RootNavigator.Navigation.navigate("Credentials")
+              navigation->Navigators.RootNavigator.Navigation.navigate(
+                "Credentials",
+              )
             }>
             <View style={styles##orangeButton}>
               <Text style={styles##buttonText}> "SIM"->React.string </Text>

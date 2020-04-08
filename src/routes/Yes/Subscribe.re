@@ -1,3 +1,58 @@
+module KeyboardHide = {
+  [@bs.module "react-native-hide-with-keyboard"] [@react.component]
+  external make: _ => React.element = "default";
+};
+
+module SubscribeForm = [%form
+  {target: ReactNative};
+  type input = {
+    name: string,
+    email: Utils.Email.t,
+    phone: string,
+    iswhats: bool,
+  };
+  let validators = {
+    name: {
+      strategy: OnFirstBlur,
+      validate: input =>
+        switch (input.name) {
+        | "" => Error({j|Nome Obrigatório.|j})
+        | _ => Ok(input.name)
+        },
+    },
+
+    email: {
+      strategy: OnFirstBlur,
+      validate: input =>
+        switch (input.email) {
+        | "" => Error({j|Email Obrigatório|j})
+        | _ =>
+          switch (input.email->Utils.Email.validate) {
+          | None => Ok(input.email)
+          | Some(_) => Error({j|Email não formatado|j})
+          }
+        },
+    },
+
+    phone: {
+      strategy: OnFirstBlur,
+      validate: input =>
+        switch (input.phone) {
+        | "" => Error({j|Telefone Obrigatório|j})
+        | _ => Ok(input.phone)
+        },
+    },
+
+    iswhats: {
+      strategy: OnFirstBlur,
+      validate: input =>
+        switch (input.iswhats) {
+        | _ => Ok(input.iswhats)
+        },
+    },
+  }
+];
+
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
@@ -11,6 +66,8 @@ let styles =
           ~flex=1.,
           (),
         ),
+      "wrapper": style(~flex=1., ~justifyContent=`flexStart, ()),
+
       "txt":
         style(
           ~fontFamily="Montserrat-SemiBold",
@@ -78,214 +135,202 @@ let styles =
         ),
       "radioActive": style(~backgroundColor="rgb(254,80,0)", ()),
       "txtRadio": style(~lineHeight=40., ()),
-      "wrapper": style(~flex=4., ~justifyContent=`center, ()),
     })
   );
 
 [@react.component]
-let make = (~navigation, ~route as _) => {
+let make =
+    (
+      ~navigation,
+      ~route:
+         ReactNavigation.Core.route(
+           Navigators.SubscribeNavigator.StakeParams.params,
+         ),
+    ) => {
   open React;
   open Belt;
   open ReactNative;
-  let emailRegexp = [%re "/[^@]+@[^\.]+\..+/"];
 
-  let errorNoName = {j|Nome Obrigatório|j};
-  let errorNoEmail = {j|E-Mail Obrigatório|j};
-  let errorNoPhone = {j|Telefone Obrigatório|j};
-  let errorEmailFormat = {j|Formato do email inválido|j};
-
-  let (name, setName) = useState(() => "");
+  let environment = ReasonRelay.useEnvironmentFromContext();
 
   let emailRef = useRef(Js.Nullable.null);
   let numberRef = useRef(Js.Nullable.null);
 
-  let (email, setEmail) = useState(() => "");
-  let (phone, setPhone) = useState(() => "");
-  let (yesActive, setYesActive) = useState(() => false);
-  let (errors, setErrors) = useState(() => Set.String.empty);
+  let cpfCnpj =
+    route.params->Option.mapWithDefault("", param => param.cpfCnpj);
 
-  React.useEffect2(
-    () => {
-      open Set.String;
+  let form =
+    SubscribeForm.useForm(
+      ~initialInput={name: "", email: "", phone: "", iswhats: false},
+      ~onSubmit=(output, cb) => {
+      Js.Promise.(
+        UpdateUserMutation.commit(
+          ~environment,
+          ~cpfCnpj,
+          ~name=Some(output.name),
+          ~phone=Some(output.phone),
+          ~email=Some(output.email),
+          ~iswhats=Some(output.iswhats),
+        )
+        |> then_(_ => {
+             navigation->Navigators.RootNavigator.Navigation.navigate(
+               "Options",
+             );
+             Keyboard.dismiss();
+             resolve();
+           })
+        |> catch(_ => {
+             cb.notifyOnFailure();
 
-      if (name === "") {
-        setErrors(e => e->add(errorNoName));
-      } else {
-        setErrors(e => e->remove(errorNoName));
-      };
-
-      if (email === "") {
-        setErrors(e => e->add(errorNoEmail));
-      } else {
-        setErrors(e => e->remove(errorNoEmail));
-      };
-
-      if (phone === "") {
-        setErrors(e => e->add(errorNoPhone));
-      } else {
-        setErrors(e => e->remove(errorNoPhone));
-      };
-
-      Some(
-        _ =>
-          switch (email |> Js.String.match(emailRegexp)) {
-          | Some(_email) => setErrors(e => e->remove(errorEmailFormat))
-          | None => setErrors(e => e->add(errorEmailFormat))
-          },
-      );
-    },
-    (name, email),
-  );
-
-  let submit = _ => {
-    navigation->RootNavigator.Navigation.navigate("Options");
-    Keyboard.dismiss();
-    // let text = {j|Olá! Meu nome é $name e meu email é $email. Gostaria de falar com uma atendente.|j};
-    // let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
-    // errors->Set.String.isEmpty
-    //   ? Js.Promise.(
-    //       Linking.canOpenURL(url)
-    //       |> then_(can =>
-    //            can
-    //              ? Linking.openURL(url) |> then_(() => resolve(true))
-    //              : reject(raise(Not_found))
-    //          )
-    //       |> catch(_ => {
-    //            resolve(false);
-    //          })
-    //     )
-    //     |> ignore
-    //   : ();
-  };
+             resolve();
+           })
+        |> ignore
+      )
+    });
 
   <View style={styles##bg}>
     <View style={styles##container}>
-      <View style={styles##wrapper}>
-        <Text style={styles##orange}>
-          {j|Vamos conversar?!|j}->React.string
-        </Text>
-        <View style={styles##inputWrapper}>
-          <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
-          <TextInput
-            returnKeyType=`next
-            blurOnSubmit=false
-            style={styles##input}
-            onChangeText={name => setName(_ => name)}
-            onSubmitEditing={_ => {
-              numberRef
-              ->React.Ref.current
-              ->Js.Nullable.toOption
-              ->Option.map(number => number->TextInput.focus)
-              ->ignore
-            }}
-          />
-          {errors->Set.String.has(errorNoName)
-             ? <View>
+      <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
+        <View style={styles##wrapper}>
+          <Text style={styles##orange}>
+            {j|Vamos conversar?!|j}->React.string
+          </Text>
+          <View style={styles##inputWrapper}>
+            <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
+            <TextInput
+              returnKeyType=`next
+              blurOnSubmit=false
+              style={styles##input}
+              onChangeText={name =>
+                form.updateName(input => {...input, name})
+              }
+              onSubmitEditing={_ => {
+                numberRef
+                ->React.Ref.current
+                ->Js.Nullable.toOption
+                ->Option.map(number => number->TextInput.focus)
+                ->ignore
+              }}
+            />
+            {switch (form.nameResult) {
+             | Some(Error(message)) =>
+               <View>
                  <Text style={styles##errorMessageText}>
-                   errorNoName->React.string
+                   message->React.string
                  </Text>
                </View>
-             : React.null}
-        </View>
-        <View style={styles##inputWrapper}>
-          <Text style={styles##txt}> "Telefone"->React.string </Text>
-          <TextInput
-            returnKeyType=`next
-            style={styles##input}
-            blurOnSubmit=false
-            ref=numberRef
-            keyboardType=`phonePad
-            onChangeText={e => setPhone(_ => e)}
-            onSubmitEditing={_ => {
-              emailRef
-              ->React.Ref.current
-              ->Js.Nullable.toOption
-              ->Option.map(email => email->TextInput.focus)
-              ->ignore
-            }}
-          />
-          <View style={styles##horizontal}>
-            <Text style={Style.array([|styles##txt, styles##txtSmall|])}>
-              {j|Aplicativo de Mensagem?|j}->React.string
-            </Text>
-            <View
-              style={Style.listOption([
-                Some(styles##radio),
-                yesActive ? Some(styles##radioActive) : None,
-              ])}>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Background.ripple(
-                  "#fff",
-                  true,
-                )}
-                onPress={_ => setYesActive(_ => true)}>
-                <Text
-                  style={Style.list([
-                    styles##txt,
-                    styles##txtSmall,
-                    styles##txtRadio,
-                  ])}>
-                  {j|Sim|j}->React.string
-                </Text>
-              </TouchableNativeFeedback>
-            </View>
-            <View
-              style={Style.listOption([
-                Some(styles##radio),
-                yesActive ? None : Some(styles##radioActive),
-              ])}>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Background.ripple(
-                  "#fff",
-                  true,
-                )}
-                onPress={_ => setYesActive(_ => false)}>
-                <Text
-                  style={Style.list([
-                    styles##txt,
-                    styles##txtSmall,
-                    styles##txtRadio,
-                  ])}>
-                  {j|Não|j}->React.string
-                </Text>
-              </TouchableNativeFeedback>
-            </View>
+             | Some(Ok(_))
+             | None => React.null
+             }}
           </View>
-          {errors->Set.String.has(errorNoPhone)
-             ? <View>
+          <View style={styles##inputWrapper}>
+            <Text style={styles##txt}> "Telefone"->React.string </Text>
+            <TextInput
+              returnKeyType=`next
+              style={styles##input}
+              blurOnSubmit=false
+              ref=numberRef
+              keyboardType=`phonePad
+              onChangeText={phone =>
+                form.updatePhone(input => {...input, phone})
+              }
+              onSubmitEditing={_ => {
+                emailRef
+                ->React.Ref.current
+                ->Js.Nullable.toOption
+                ->Option.map(email => email->TextInput.focus)
+                ->ignore
+              }}
+            />
+            <View style={styles##horizontal}>
+              <Text style={Style.array([|styles##txt, styles##txtSmall|])}>
+                {j|Aplicativo de Mensagem?|j}->React.string
+              </Text>
+              <View
+                style={Style.listOption([
+                  Some(styles##radio),
+                  form.input.iswhats ? Some(styles##radioActive) : None,
+                ])}>
+                <TouchableNativeFeedback
+                  background={TouchableNativeFeedback.Background.ripple(
+                    "#fff",
+                    true,
+                  )}
+                  onPress={_ =>
+                    form.updateIswhats(input => {...input, iswhats: true})
+                  }>
+                  <Text
+                    style={Style.list([
+                      styles##txt,
+                      styles##txtSmall,
+                      styles##txtRadio,
+                    ])}>
+                    {j|Sim|j}->React.string
+                  </Text>
+                </TouchableNativeFeedback>
+              </View>
+              <View
+                style={Style.listOption([
+                  Some(styles##radio),
+                  form.input.iswhats ? None : Some(styles##radioActive),
+                ])}>
+                <TouchableNativeFeedback
+                  background={TouchableNativeFeedback.Background.ripple(
+                    "#fff",
+                    true,
+                  )}
+                  onPress={_ =>
+                    form.updateIswhats(input => {...input, iswhats: false})
+                  }>
+                  <Text
+                    style={Style.list([
+                      styles##txt,
+                      styles##txtSmall,
+                      styles##txtRadio,
+                    ])}>
+                    {j|Não|j}->React.string
+                  </Text>
+                </TouchableNativeFeedback>
+              </View>
+            </View>
+            {switch (form.phoneResult) {
+             | Some(Error(message)) =>
+               <View>
                  <Text style={styles##errorMessageText}>
-                   {errors->Set.String.has(errorNoPhone)
-                      ? errorNoPhone->React.string : React.null}
+                   message->React.string
                  </Text>
                </View>
-             : React.null}
-        </View>
-        <View style={styles##inputWrapper}>
-          <Text style={styles##txt}> "E-Mail"->React.string </Text>
-          <TextInput
-            returnKeyType=`go
-            style={styles##input}
-            ref=emailRef
-            keyboardType=`emailAddress
-            onChangeText={e => setEmail(_ => e)}
-            onSubmitEditing=submit
-          />
-          {errors->Set.String.has(errorNoEmail)
-           || errors->Set.String.has(errorEmailFormat)
-             ? <View>
+             | Some(Ok(_))
+             | None => React.null
+             }}
+          </View>
+          <View style={styles##inputWrapper}>
+            <Text style={styles##txt}> "E-Mail"->React.string </Text>
+            <TextInput
+              returnKeyType=`go
+              style={styles##input}
+              ref=emailRef
+              keyboardType=`emailAddress
+              onChangeText={email =>
+                form.updateEmail(input => {...input, email})
+              }
+            />
+            {switch (form.emailResult) {
+             | Some(Error(message)) =>
+               <View>
                  <Text style={styles##errorMessageText}>
-                   {errors->Set.String.has(errorNoEmail)
-                      ? errorNoEmail->React.string : React.null}
-                 </Text>
-                 <Text style={styles##errorMessageText}>
-                   {errors->Set.String.has(errorEmailFormat)
-                      ? errorEmailFormat->React.string : React.null}
+                   message->React.string
                  </Text>
                </View>
-             : React.null}
+             | Some(Ok(_))
+             | None => React.null
+             }}
+          </View>
         </View>
-      </View>
-      <SubmitButton errors submit />
+      </TouchableWithoutFeedback>
+      <KeyboardHide>
+        <SubmitButton valid={form.valid} submit={form.submit} />
+      </KeyboardHide>
     </View>
   </View>;
 };

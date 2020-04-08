@@ -6,3 +6,11 @@ module Async = {
     let let_ = Promise.map;
   };
 };
+
+module Email = {
+  type t = string;
+
+  let emailRegexp = [%re "/[^@]+@[^\\.]+\\..+/"];
+
+  let validate = email => email |> Js.String.match(emailRegexp);
+};

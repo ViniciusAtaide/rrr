@@ -7,7 +7,7 @@ let styles =
           ~alignItems=`flexStart,
           ~justifyContent=`center,
           ~flex=1.,
-          ~padding=25.->dp,
+          ~paddingHorizontal=35.->dp,
           (),
         ),
       "txt":
@@ -18,9 +18,23 @@ let styles =
           ~paddingTop=20.->dp,
           (),
         ),
-      "icons": style(~flex=1., ~flexDirection=`column, ()),
-      "line": style(~flexDirection=`row, ~height=50.->dp, ()),
-      "iconSize": style(~height=120.->dp, ~width=120.->dp, ()),
+      "icons":
+        style(
+          ~flex=1.,
+          ~paddingHorizontal=35.->dp,
+          ~flexDirection=`column,
+          (),
+        ),
+      "line":
+        style(
+          ~flexDirection=`row,
+          ~width=100.->pct,
+          ~justifyContent=`spaceBetween,
+          ~marginBottom=40.->dp,
+          ~height=65.->dp,
+          (),
+        ),
+      "iconSize": style(~height=65.->dp, ~width=65.->dp, ()),
     })
   );
 
@@ -40,36 +54,79 @@ let make = (~navigation as _, ~route as _) => {
         </View>
         <View style={styles##icons}>
           <View style={styles##line}>
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(Packager.require("./Media/Insta-01.png"))}
-            />
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(Packager.require("./Media/Face-01.png"))}
-            />
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(Packager.require("./Media/Site.png"))}
-            />
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL("https://www.instagram.com/marcosinacio.adv/")
+                |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(
+                  Packager.require("./Media/Insta-01.png"),
+                )}
+              />
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL(
+                  "https://www.facebook.com/MarcosInacioAdvogados/",
+                )
+                |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(
+                  Packager.require("./Media/Face-01.png"),
+                )}
+              />
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL("https://www.marcosinacio.adv.br/") |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(Packager.require("./Media/Site.png"))}
+              />
+            </TouchableNativeFeedback>
           </View>
           <View style={styles##line}>
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(
-                Packager.require("./Media/Linked-01.png"),
-              )}
-            />
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(Packager.require("./Media/Tube-01.png"))}
-            />
-            <Image
-              style={Style.list([styles##iconSize])}
-              source={fromRequired(
-                Packager.require("./Media/Twitter-01.png"),
-              )}
-            />
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL(
+                  "https://www.linkedin.com/company/marcos-in%C3%A1cio-advogados/",
+                )
+                |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(
+                  Packager.require("./Media/Linked-01.png"),
+                )}
+              />
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL("https://bit.ly/2Fcl1mI") |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(
+                  Packager.require("./Media/Tube-01.png"),
+                )}
+              />
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              onPress={_ =>
+                Linking.openURL("https://twitter.com/miadvocacia") |> ignore
+              }>
+              <Image
+                style={Style.list([styles##iconSize])}
+                source={fromRequired(
+                  Packager.require("./Media/Twitter-01.png"),
+                )}
+              />
+            </TouchableNativeFeedback>
           </View>
         </View>
       </View>
