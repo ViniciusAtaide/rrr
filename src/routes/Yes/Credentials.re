@@ -90,13 +90,17 @@ let make = (~navigation, ~route as _) => {
         |> then_((res: Query.Operation.response) => {
              switch (res.userByCpfCnpj) {
              | Some(_) =>
+               Keyboard.dismiss();
+
                navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
                  "Auth",
                  {cpfCnpj: output.cpfCnpj},
                );
-
+               cb.reset();
                resolve(res);
+
              | None =>
+               Js.log("Aqui2");
                ReactNative.ToastAndroid.(
                  showWithGravityAndOffset(
                    {j|CPF não cadastrado no sistema|j},
@@ -125,10 +129,11 @@ let make = (~navigation, ~route as _) => {
           "Para iniciarmos o atendimento, informe por gentileza o seu CPF ou CNPJ:"
           ->React.string
         </Text>
-        <TextInput
+        <TextInputMask
           onChangeText={cpfCnpj =>
             form.updateCpfCnpj(_ => {cpfCnpj: cpfCnpj})
           }
+          mask="[000].[000].[000]-[00]"
           returnKeyType=`go
           keyboardType=`numberPad
           style={styles##input}
@@ -144,7 +149,11 @@ let make = (~navigation, ~route as _) => {
          | None => React.null
          }}
       </SafeAreaView>
-      <SubmitButton valid={form.valid} submit={_ => form.submit()} />
+      <SubmitButton
+        valid={form.valid}
+        loading={form.submitting}
+        submit={_ => form.submit()}
+      />
     </KeyboardAvoidingView>
   </View>;
 };

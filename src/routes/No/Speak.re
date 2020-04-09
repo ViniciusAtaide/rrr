@@ -20,8 +20,8 @@ module SpeakForm = [%form
         | "" => Error({j|Email Obrigatório|j})
         | _ =>
           switch (input.email->Utils.Email.validate) {
-          | None => Ok(input.email)
-          | Some(_) => Error({j|Email não formatado|j})
+          | None => Error({j|Email não formatado|j})
+          | Some(_) => Ok(input.email)
           }
         },
     },
@@ -33,14 +33,8 @@ let styles =
     ReactNative.StyleSheet.create({
       "bg": style(~backgroundColor="rgb(36, 37, 36)", ~flex=1., ()),
       "container":
-        style(
-          ~height=100.->pct,
-          ~width=100.->pct,
-          ~alignContent=`spaceAround,
-          ~padding=25.->dp,
-          ~flex=1.,
-          (),
-        ),
+        style(~alignContent=`flexStart, ~padding=25.->dp, ~flex=1., ()),
+      "wrapper": style(~flex=1., ~justifyContent=`center, ()),
       "txt":
         style(
           ~fontFamily="Montserrat-SemiBold",
@@ -94,7 +88,6 @@ let styles =
           (),
         ),
       "errorMessageActive": style(~opacity=1., ()),
-      "wrapper": style(~flex=1.3, ~justifyContent=`flexEnd, ()),
     })
   );
 
@@ -110,16 +103,18 @@ let make = (~navigation as _, ~route as _) => {
     SpeakForm.useForm(
       ~initialInput={name: "", email: ""},
       ~onSubmit=(output, cb) => {
-        let text = {j|Olá! Meu nome é $output.name e meu email é $output.email. Gostaria de falar com uma atendente.|j};
+        let name = output.name;
+        let email = output.email;
+
+        let text = {j|Olá! Meu nome é $name e meu email é $email. Gostaria de falar com uma atendente.|j};
         let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
 
         Js.Promise.(
-          Linking.canOpenURL(url)
-          |> then_(can =>
-               can
-                 ? Linking.openURL(url) |> then_(() => resolve(true))
-                 : reject(raise(Not_found))
-             )
+          Linking.openURL(url)
+          |> then_(() => {
+               cb.reset();
+               resolve(true);
+             })
           |> catch(_ => {
                cb.notifyOnFailure();
                resolve(false);
@@ -184,7 +179,11 @@ let make = (~navigation as _, ~route as _) => {
            }}
         </View>
       </SafeAreaView>
-      <SubmitButton valid={form.valid} submit={form.submit} />
+      <SubmitButton
+        valid={form.valid}
+        loading={form.submitting}
+        submit={form.submit}
+      />
     </KeyboardAvoidingView>
   </View>;
 };

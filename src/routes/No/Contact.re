@@ -1,3 +1,18 @@
+module Form = [%form
+  {target: ReactNative};
+  type input = {text: string};
+  let validators = {
+    text: {
+      strategy: OnFirstBlur,
+      validate: input =>
+        switch (input.text) {
+        | "" => Error({j|Texto Obrigatório.|j})
+        | _ => Ok(input.text)
+        },
+    },
+  }
+];
+
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
@@ -33,6 +48,13 @@ let styles =
           ~width=100.->pct,
           (),
         ),
+      "errorMessageText":
+        style(
+          ~fontSize=16.,
+          ~fontFamily="Montserrat-SemiBold",
+          ~color="rgb(254,80,0)",
+          (),
+        ),
       "orange":
         style(
           ~color="rgb(254,80,0)",
@@ -45,67 +67,82 @@ let styles =
         style(~width=150.->dp, ~height=90.->dp, ~alignSelf=`center, ()),
       "figure":
         style(~width=150.->dp, ~alignSelf=`center, ~height=50.->dp, ()),
+      "loading": style(~width=50.->dp, ~height=50.->dp, ()),
     })
   );
 
 [@react.component]
 let make = (~navigation, ~route as _) => {
-  let (text, setText) = React.useState(() => "");
+  let form =
+    Form.useForm(
+      ~initialInput={text: ""},
+      ~onSubmit=(output, cb) => {
+        let text = output.text;
 
-  let submit = _ => {
-    let url = "https://api.mailgun.net/v3/sandbox569e8db6afe542a1829ebde3c140630f.mailgun.org/messages";
-    open Js.Dict;
-    let payload = empty();
-    payload->set("from", Js.Json.string("Mailgun Sandbox"));
-    payload->set("to", Js.Json.string("contato@marcosinacio.adv.br"));
-    payload->set("subject", Js.Json.string("Contato Aplicativo"));
-    payload->set("from", Js.Json.string({j|$text|j}));
+        let url = "https://api.mailgun.net/v3/sandbox569e8db6afe542a1829ebde3c140630f.mailgun.org/messages";
+        open Js.Dict;
+        let payload = empty();
+        payload->set("from", Js.Json.string("Mailgun Sandbox"));
+        payload->set("to", Js.Json.string("contato@marcosinacio.adv.br"));
+        payload->set("subject", Js.Json.string("Contato Aplicativo"));
+        payload->set("from", Js.Json.string({j|$text|j}));
 
-    Js.Promise.(
-      Fetch.(
-        fetchWithInit(
-          url,
-          RequestInit.make(
-            ~method_=Post,
-            ~body=
-              BodyInit.make(Js.Json.stringify(Js.Json.object_(payload))),
-            ~headers=
-              HeadersInit.make({
-                "Authorization": "Basic YXBpOjA0MTA4M2U0MmFiNWY3N2ZkMzEyN2I0NzE4MzZlNzI4LTQ2YWM2YjAwLTk5NzM0OWNj",
-                "Content-Type": "multipart/form-data",
-              }),
-            (),
-          ),
+        Js.Promise.(
+          Fetch.(
+            fetchWithInit(
+              url,
+              RequestInit.make(
+                ~method_=Post,
+                ~body=
+                  BodyInit.make(
+                    Js.Json.stringify(Js.Json.object_(payload)),
+                  ),
+                ~headers=
+                  HeadersInit.make({
+                    "Authorization": "Basic YXBpOjA0MTA4M2U0MmFiNWY3N2ZkMzEyN2I0NzE4MzZlNzI4LTQ2YWM2YjAwLTk5NzM0OWNj",
+                    "Content-Type": "multipart/form-data",
+                  }),
+                (),
+              ),
+            )
+          )
+          |> then_(_ => {
+               open ReactNative.ToastAndroid;
+               showWithGravityAndOffset(
+                 "Email Enviado",
+                 long,
+                 bottom,
+                 ~xOffset=25.,
+                 ~yOffset=50.,
+               );
+               ReactNative.Keyboard.dismiss();
+               navigation->Navigators.RootNavigator.Navigation.navigate(
+                 "Media",
+               );
+               cb.reset();
+               resolve();
+             })
+          |> catch(_ => {
+               open ReactNative.ToastAndroid;
+
+               showWithGravityAndOffset(
+                 "Houve um erro no envio do E-Mail",
+                 long,
+                 bottom,
+                 ~xOffset=25.,
+                 ~yOffset=50.,
+               );
+
+               cb.notifyOnFailure();
+
+               ReactNative.Keyboard.dismiss();
+
+               resolve();
+             })
         )
-      )
-      |> then_(_ => {
-           open ReactNative.ToastAndroid;
-           showWithGravityAndOffset(
-             "Email Enviado",
-             long,
-             bottom,
-             ~xOffset=25.,
-             ~yOffset=50.,
-           );
-           navigation->Navigators.RootNavigator.Navigation.navigate("Social");
-           resolve();
-         })
-      |> catch(_ => {
-           open ReactNative.ToastAndroid;
-
-           showWithGravityAndOffset(
-             "Houve um erro no envio do E-Mail",
-             long,
-             bottom,
-             ~xOffset=25.,
-             ~yOffset=50.,
-           );
-
-           resolve();
-         })
-    )
-    |> ignore;
-  };
+        |> ignore;
+      },
+    );
 
   ReactNative.(
     <View style={styles##bg}>
@@ -117,12 +154,25 @@ let make = (~navigation, ~route as _) => {
           multiline=true
           numberOfLines=16
           style={styles##txtArea}
-          onChangeText={text => setText(_ => text)}
+          onChangeText={text => form.updateText(_ => {text: text})}
         />
+        {switch (form.textResult) {
+         | Some(Error(message)) =>
+           <View>
+             <Text style={styles##errorMessageText}>
+               message->React.string
+             </Text>
+           </View>
+         | Some(Ok(_))
+         | None => React.null
+         }}
         <TouchableOpacity
           style={ReactNative.Style.style(~alignSelf=`flexEnd, ())}
-          onPress=submit>
-          <Text style={styles##txt}> "Enviar"->React.string </Text>
+          onPress={_ => form.submit()}>
+          <Text style={styles##txt}>
+            {form.submitting
+               ? "Carregando"->React.string : "Enviar"->React.string}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles##bottom}>

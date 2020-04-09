@@ -1,6 +1,6 @@
 module KeyboardHide = {
   [@bs.module "react-native-hide-with-keyboard"] [@react.component]
-  external make: _ => React.element = "default";
+  external make: (~children: React.element) => React.element = "default";
 };
 
 module SubscribeForm = [%form
@@ -28,8 +28,8 @@ module SubscribeForm = [%form
         | "" => Error({j|Email Obrigatório|j})
         | _ =>
           switch (input.email->Utils.Email.validate) {
-          | None => Ok(input.email)
-          | Some(_) => Error({j|Email não formatado|j})
+          | None => Error({j|Email não formatado|j})
+          | Some(_) => Ok(input.email)
           }
         },
     },
@@ -157,36 +157,56 @@ let make =
   let numberRef = useRef(Js.Nullable.null);
 
   let cpfCnpj =
-    route.params->Option.mapWithDefault("", param => param.cpfCnpj);
+    route.params->Option.mapWithDefault("", param => {param.cpfCnpj});
+
+  Js.log2("params", route.params);
 
   let form =
     SubscribeForm.useForm(
       ~initialInput={name: "", email: "", phone: "", iswhats: false},
       ~onSubmit=(output, cb) => {
-      Js.Promise.(
-        UpdateUserMutation.commit(
-          ~environment,
-          ~cpfCnpj,
-          ~name=Some(output.name),
-          ~phone=Some(output.phone),
-          ~email=Some(output.email),
-          ~iswhats=Some(output.iswhats),
-        )
-        |> then_(_ => {
-             navigation->Navigators.RootNavigator.Navigation.navigate(
-               "Options",
-             );
-             Keyboard.dismiss();
-             resolve();
-           })
-        |> catch(_ => {
-             cb.notifyOnFailure();
+        Js.log2("Hello", cpfCnpj);
 
-             resolve();
-           })
-        |> ignore
-      )
-    });
+        Js.Promise.(
+          UpdateUserMutation.commit(
+            ~environment,
+            ~cpfCnpj,
+            ~name=Some(output.name),
+            ~phone=Some(output.phone),
+            ~email=Some(output.email),
+            ~iswhats=Some(output.iswhats),
+          )
+          |> then_(_ => {
+               navigation->Navigators.RootNavigator.Navigation.navigate(
+                 "Options",
+               );
+               cb.reset();
+               Keyboard.dismiss();
+               resolve();
+             })
+          |> catch(error => {
+               cb.notifyOnFailure();
+               open ReactNative.ToastAndroid;
+               Keyboard.dismiss();
+
+               Js.log(error);
+               showWithGravityAndOffset(
+                 {j|Não houve campos atualizados|j},
+                 long,
+                 bottom,
+                 ~xOffset=25.,
+                 ~yOffset=50.,
+               );
+               navigation->Navigators.RootNavigator.Navigation.navigate(
+                 "Options",
+               );
+
+               resolve();
+             })
+          |> ignore
+        );
+      },
+    );
 
   <View style={styles##bg}>
     <View style={styles##container}>
@@ -329,7 +349,11 @@ let make =
         </View>
       </TouchableWithoutFeedback>
       <KeyboardHide>
-        <SubmitButton valid={form.valid} submit={form.submit} />
+        <SubmitButton
+          valid={form.valid}
+          loading={form.submitting}
+          submit={form.submit}
+        />
       </KeyboardHide>
     </View>
   </View>;

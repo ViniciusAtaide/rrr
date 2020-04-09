@@ -35,20 +35,26 @@ let styles =
   );
 
 [@react.component]
-let make = (~submit, ~valid) => {
+let make = (~submit, ~valid, ~loading) => {
   <View style={styles##buttonWrapper}>
-    <View style={styles##button}>
-      <TouchableNativeFeedback
-        background={TouchableNativeFeedback.Background.ripple("#000", false)}
-        onPress={_ => submit()}>
+    <TouchableNativeFeedback
+      background={TouchableNativeFeedback.Background.ripple("#000", false)}
+      onPress={_ => loading ? () : submit()}>
+      <View style={styles##button}>
         <Text
           style={Style.listOption([
             Some(styles##txtBlk),
             valid() ? None : Some(styles##txtLight),
           ])}>
-          "CONTINUAR"->React.string
+          {loading
+             ? <Image
+                 source={Image.Source.fromRequired(
+                   Packager.require("../images/loading.gif"),
+                 )}
+               />
+             : "CONTINUAR"->React.string}
         </Text>
-      </TouchableNativeFeedback>
-    </View>
+      </View>
+    </TouchableNativeFeedback>
   </View>;
 };
