@@ -3,7 +3,7 @@
 module Unions = {};
 
 module Types = {
-  type userByCpfCnpj = {_id: int};
+  type userByCpfCnpj = {name: option(string)};
 };
 
 open Types;
@@ -18,7 +18,7 @@ type variables = {cpfCnpj: string};
 module Internal = {
   type responseRaw;
   let responseConverter: Js.Dict.t(Js.Dict.t(Js.Dict.t(string))) = [%raw
-    {| {"__root":{"userByCpfCnpj":{"n":""}}} |}
+    {| {"__root":{"userByCpfCnpj":{"n":""},"userByCpfCnpj_name":{"n":""}}} |}
   ];
   let responseConverterMap = ();
   let convertResponse = v =>
@@ -75,7 +75,7 @@ v1 = [
       {
         "kind": "ScalarField",
         "alias": null,
-        "name": "_id",
+        "name": "name",
         "args": null,
         "storageKey": null
       }
@@ -102,7 +102,7 @@ return {
     "operationKind": "query",
     "name": "CredentialsQuery",
     "id": null,
-    "text": "query CredentialsQuery(\n  $cpfCnpj: String!\n) {\n  userByCpfCnpj(cpfCnpj: $cpfCnpj) {\n    _id\n  }\n}\n",
+    "text": "query CredentialsQuery(\n  $cpfCnpj: String!\n) {\n  userByCpfCnpj(cpfCnpj: $cpfCnpj) {\n    name\n  }\n}\n",
     "metadata": {}
   }
 };

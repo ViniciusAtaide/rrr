@@ -6,7 +6,7 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
   (operation, variables, _cacheConfig) =>
     Fetch.(
       fetchWithInit(
-        "http://ec2-3-82-204-231.compute-1.amazonaws.com/graphql",
+        "https://mia.adv.br/graphql",
         RequestInit.make(
           ~method_=Post,
           ~body=
@@ -30,6 +30,17 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
              if (Response.ok(resp)) {
                Response.json(resp);
              } else {
+               ReactNative.ToastAndroid.(
+                 showWithGravityAndOffset(
+                   "Erro na conexão",
+                   long,
+                   bottom,
+                   ~xOffset=0.,
+                   ~yOffset=50.,
+                 )
+                 
+               );
+
                reject(
                  Graphql_error(
                    "Request failed: " ++ Response.statusText(resp),

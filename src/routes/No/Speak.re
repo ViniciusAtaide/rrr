@@ -126,59 +126,65 @@ let make = (~navigation as _, ~route as _) => {
 
   <View style={styles##bg}>
     <KeyboardAvoidingView behavior=`height style={styles##container}>
-      <SafeAreaView style={styles##wrapper}>
-        <Text style={styles##orange}>
-          {j|Vamos conversar?!|j}->React.string
-        </Text>
-        <View style={styles##inputWrapper}>
-          <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
-          <TextInput
-            returnKeyType=`next
-            blurOnSubmit=false
-            style={styles##input}
-            onChangeText={name => form.updateName(input => {...input, name})}
-            onSubmitEditing={_ => {
-              emailRef
-              ->React.Ref.current
-              ->Js.Nullable.toOption
-              ->Option.map(email => email->TextInput.focus)
-              ->ignore
-            }}
-          />
-          {switch (form.nameResult) {
-           | Some(Error(message)) =>
-             <View>
-               <Text style={styles##errorMessageText}>
-                 message->React.string
-               </Text>
-             </View>
-           | Some(Ok(_))
-           | None => React.null
-           }}
-        </View>
-        <View style={styles##inputWrapper}>
-          <Text style={styles##txt}> "Informe seu E-Mail"->React.string </Text>
-          <TextInput
-            returnKeyType=`go
-            style={styles##input}
-            ref=emailRef
-            onChangeText={email =>
-              form.updateEmail(input => {...input, email})
-            }
-            onSubmitEditing={_ => form.submit()}
-          />
-          {switch (form.emailResult) {
-           | Some(Error(message)) =>
-             <View>
-               <Text style={styles##errorMessageText}>
-                 message->React.string
-               </Text>
-             </View>
-           | Some(Ok(_))
-           | None => React.null
-           }}
-        </View>
-      </SafeAreaView>
+      <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
+        <SafeAreaView style={styles##wrapper}>
+          <Text style={styles##orange}>
+            {j|Vamos conversar?!|j}->React.string
+          </Text>
+          <View style={styles##inputWrapper}>
+            <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
+            <TextInput
+              returnKeyType=`next
+              blurOnSubmit=false
+              style={styles##input}
+              onChangeText={name =>
+                form.updateName(input => {...input, name})
+              }
+              onSubmitEditing={_ => {
+                emailRef
+                ->React.Ref.current
+                ->Js.Nullable.toOption
+                ->Option.map(email => email->TextInput.focus)
+                ->ignore
+              }}
+            />
+            {switch (form.nameResult) {
+             | Some(Error(message)) =>
+               <View>
+                 <Text style={styles##errorMessageText}>
+                   message->React.string
+                 </Text>
+               </View>
+             | Some(Ok(_))
+             | None => React.null
+             }}
+          </View>
+          <View style={styles##inputWrapper}>
+            <Text style={styles##txt}>
+              "Informe seu E-Mail"->React.string
+            </Text>
+            <TextInput
+              returnKeyType=`go
+              style={styles##input}
+              ref=emailRef
+              onChangeText={email =>
+                form.updateEmail(input => {...input, email})
+              }
+              onSubmitEditing={_ => form.submit()}
+            />
+            {switch (form.emailResult) {
+             | Some(Error(message)) =>
+               <View>
+                 <Text style={styles##errorMessageText}>
+                   message->React.string
+                 </Text>
+               </View>
+             | Some(Ok(_))
+             | None => React.null
+             }}
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
       <SubmitButton
         valid={form.valid}
         loading={form.submitting}

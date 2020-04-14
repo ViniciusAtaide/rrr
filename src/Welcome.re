@@ -85,19 +85,19 @@ let make = (~navigation, ~route as _) => {
   ReactNative.(
     <View style={styles##imgBg}>
       <View style={styles##container}>
-        <Text style={styles##txt}> {js|Olá!|js}->React.string </Text>
+        <Text style={styles##txt}> {j|Olá!|j}->React.string </Text>
         <Text style={styles##txt}> "Bem-vindo ao "->React.string </Text>
         <Text style={styles##txt}>
           <Text style={styles##orange}>
-            {js|ESCRITÓRIO DIGITAL|js}->ReasonReact.string
+            {j|ESCRITÓRIO DIGITAL|j}->ReasonReact.string
           </Text>
           " da "->React.string
         </Text>
         <Text style={styles##txtBold}>
-          {js|Marcos Inácio Advogados|js}->React.string
+          {j|Marcos Inácio Advogados|j}->React.string
         </Text>
         <Text style={styles##txtSmall}>
-          {js|Já é nosso Cliente?|js}->React.string
+          {j|Já é nosso Cliente?|j}->React.string
         </Text>
       </View>
       <View style={styles##vertical}>
@@ -122,7 +122,7 @@ let make = (~navigation, ~route as _) => {
             }>
             <View style={Style.list([styles##grayButton, styles##padding])}>
               <Text style={styles##buttonText}>
-                {js|NÃO|js}->React.string
+                {j|NÃO|j}->React.string
               </Text>
             </View>
           </TouchableNativeFeedback>
@@ -132,9 +132,7 @@ let make = (~navigation, ~route as _) => {
               true,
             )}
             onPress={_ =>
-              navigation->Navigators.RootNavigator.Navigation.navigate(
-                "Credentials",
-              )
+              navigation->Navigators.RootNavigator.Navigation.navigate("Auth")
             }>
             <View style={styles##orangeButton}>
               <Text style={styles##buttonText}> "SIM"->React.string </Text>

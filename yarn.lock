@@ -5714,6 +5714,11 @@ reason-promise@^1.0.2:
   resolved "https://registry.yarnpkg.com/reason-promise/-/reason-promise-1.0.2.tgz#22b9bb4097ce511190182b948aef11427d5b8b86"
   integrity sha512-j8DWV+71wNEKQmyW6zBOowIZq1Qec5CDWyLI37BvgOmAZgRFGFQ1MaJnbhqDe3JsYmaGyqdNMmpCJLl9EDbDAg==
 
+reason-react-native-maps@^0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/reason-react-native-maps/-/reason-react-native-maps-0.27.0.tgz#0a180c9b609cfa3ea2dee9a252ce8102d5a37c71"
+  integrity sha512-ZjToTPFK236981lU56HOrmAEvjlFPcRvIlwo/xiyI47NSZ1RTPqdFPXUDoXtD9z+QbMh4kSgbhXX4DJq9Dslvg==
+
 reason-react-native@^0.61.1:
   version "0.61.1"
   resolved "https://registry.yarnpkg.com/reason-react-native/-/reason-react-native-0.61.1.tgz#fe5cac135a4ed0aacddf9162f532bde7d08781e0"

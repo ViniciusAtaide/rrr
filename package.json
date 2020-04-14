@@ -34,6 +34,7 @@
     "reason-promise": "^1.0.2",
     "reason-react": "^0.7.0",
     "reason-react-native": "^0.61.1",
+    "reason-react-native-maps": "^0.27.0",
     "reason-react-navigation": "^5.0.0-beta.0",
     "reason-relay": "^0.5.3",
     "relay-compiler": "8.0.0",

@@ -45,19 +45,24 @@ let make = (~navigation, ~route as _) => {
     <View style={styles##bg}>
       <View style={styles##container}>
         <Text style={styles##orange}>
-          {js|O que deseja?!|js}->React.string
+          {j|O que deseja?!|j}->React.string
         </Text>
         <TouchableOpacity
           onPress={_ =>
             navigation->Navigators.RootNavigator.Navigation.navigate("Speak")
           }>
           <Text style={styles##txt}>
-            "Falar com um atendente"->React.string
+            {j|Falar com um atendente|j}->React.string
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={_ =>
+            navigation->Navigators.RootNavigator.Navigation.navigate(
+              "Location",
+            )
+          }>
           <Text style={styles##txt}>
-            {js|Encontrar o escritório mais perto de você|js}->React.string
+            {j|Encontrar o escritório mais perto de você|j}->React.string
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -67,7 +72,7 @@ let make = (~navigation, ~route as _) => {
             )
           }>
           <Text style={styles##txt}>
-            {js|Fazer elogios ou reclamações|js}->React.string
+            {j|Fazer elogios ou reclamações|j}->React.string
           </Text>
         </TouchableOpacity>
         <View style={styles##center}>

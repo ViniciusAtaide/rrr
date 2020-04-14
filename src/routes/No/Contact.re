@@ -112,7 +112,7 @@ let make = (~navigation, ~route as _) => {
                  "Email Enviado",
                  long,
                  bottom,
-                 ~xOffset=25.,
+                 ~xOffset=0.,
                  ~yOffset=50.,
                );
                ReactNative.Keyboard.dismiss();
@@ -145,50 +145,52 @@ let make = (~navigation, ~route as _) => {
     );
 
   ReactNative.(
-    <View style={styles##bg}>
-      <View style={styles##container}>
-        <Text style={styles##orange}>
-          {j|Conte-nos sua experiência:|j}->React.string
-        </Text>
-        <TextInput
-          multiline=true
-          numberOfLines=16
-          style={styles##txtArea}
-          onChangeText={text => form.updateText(_ => {text: text})}
-        />
-        {switch (form.textResult) {
-         | Some(Error(message)) =>
-           <View>
-             <Text style={styles##errorMessageText}>
-               message->React.string
-             </Text>
-           </View>
-         | Some(Ok(_))
-         | None => React.null
-         }}
-        <TouchableOpacity
-          style={ReactNative.Style.style(~alignSelf=`flexEnd, ())}
-          onPress={_ => form.submit()}>
-          <Text style={styles##txt}>
-            {form.submitting
-               ? "Carregando"->React.string : "Enviar"->React.string}
+    <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
+      <View style={styles##bg}>
+        <View style={styles##container}>
+          <Text style={styles##orange}>
+            {j|Conte-nos sua experiência:|j}->React.string
           </Text>
-        </TouchableOpacity>
+          <TextInput
+            multiline=true
+            numberOfLines=16
+            style={styles##txtArea}
+            onChangeText={text => form.updateText(_ => {text: text})}
+          />
+          {switch (form.textResult) {
+           | Some(Error(message)) =>
+             <View>
+               <Text style={styles##errorMessageText}>
+                 message->React.string
+               </Text>
+             </View>
+           | Some(Ok(_))
+           | None => React.null
+           }}
+          <TouchableOpacity
+            style={ReactNative.Style.style(~alignSelf=`flexEnd, ())}
+            onPress={_ => form.submit()}>
+            <Text style={styles##txt}>
+              {form.submitting
+                 ? "Carregando"->React.string : "Enviar"->React.string}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles##bottom}>
+          <Image
+            style={styles##signature}
+            source={Image.Source.fromRequired(
+              Packager.require("../../images/signature.png"),
+            )}
+          />
+          <Image
+            style={styles##figure}
+            source={Image.Source.fromRequired(
+              Packager.require("../../images/30years.png"),
+            )}
+          />
+        </View>
       </View>
-      <View style={styles##bottom}>
-        <Image
-          style={styles##signature}
-          source={Image.Source.fromRequired(
-            Packager.require("../../images/signature.png"),
-          )}
-        />
-        <Image
-          style={styles##figure}
-          source={Image.Source.fromRequired(
-            Packager.require("../../images/30years.png"),
-          )}
-        />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };

@@ -2,7 +2,7 @@ module Query = [%relay.query
   {|
   query CredentialsQuery($cpfCnpj: String!) {
     userByCpfCnpj(cpfCnpj: $cpfCnpj) {
-      _id
+      name
     }
   }
 |}
@@ -79,8 +79,36 @@ let styles =
 [@react.component]
 let make = (~navigation, ~route as _) => {
   open ReactNative;
-
   let environment = ReasonRelay.useEnvironmentFromContext();
+
+  let createAndGoToAuth =
+      (
+        ~cpfCnpj,
+        ~cb:
+           Formality.submissionCallbacks(
+             CredentialsForm.input,
+             CredentialsForm.submissionError,
+           ),
+      ) => {
+    Js.Promise.(
+      CreateUserMutation.commit(~environment, ~cpfCnpj)
+      |> then_(_ => {
+           Keyboard.dismiss();
+           navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
+             "Subscribe",
+             {cpfCnpj: cpfCnpj},
+           );
+           cb.reset();
+           resolve();
+         })
+      |> catch(e => {
+           Js.log(e);
+           resolve();
+         })
+    )
+    |> ignore;
+    Js.Promise.resolve();
+  };
 
   let form =
     CredentialsForm.useForm(
@@ -89,30 +117,27 @@ let make = (~navigation, ~route as _) => {
         Query.fetch(~environment, ~variables={cpfCnpj: output.cpfCnpj})
         |> then_((res: Query.Operation.response) => {
              switch (res.userByCpfCnpj) {
-             | Some(_) =>
+             | Some(user) =>
                Keyboard.dismiss();
 
-               navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
-                 "Auth",
-                 {cpfCnpj: output.cpfCnpj},
-               );
-               cb.reset();
-               resolve(res);
+               switch (user.name) {
+               | Some(_) =>
+                 navigation->Navigators.RootNavigator.Navigation.navigate(
+                   "Options",
+                 );
+                 cb.reset();
+                 resolve();
+               | None =>
+                 Keyboard.dismiss();
+                 navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
+                   "Subscribe",
+                   {cpfCnpj: output.cpfCnpj},
+                 );
+                 cb.reset();
+                 resolve();
+               };
 
-             | None =>
-               Js.log("Aqui2");
-               ReactNative.ToastAndroid.(
-                 showWithGravityAndOffset(
-                   {j|CPF não cadastrado no sistema|j},
-                   long,
-                   bottom,
-                   ~xOffset=25.,
-                   ~yOffset=50.,
-                 )
-               );
-
-               cb.notifyOnFailure();
-               reject(raise(Not_found));
+             | None => createAndGoToAuth(~cpfCnpj=output.cpfCnpj, ~cb)
              }
            })
       )
@@ -121,38 +146,40 @@ let make = (~navigation, ~route as _) => {
 
   <View style={styles##bg}>
     <KeyboardAvoidingView behavior=`height style={styles##container}>
-      <SafeAreaView style={styles##wrapper}>
-        <Text style={styles##orange}>
-          {j|É sempre um prazer atender você!|j}->React.string
-        </Text>
-        <Text style={styles##txt}>
-          "Para iniciarmos o atendimento, informe por gentileza o seu CPF ou CNPJ:"
-          ->React.string
-        </Text>
-        <TextInputMask
-          onChangeText={cpfCnpj =>
-            form.updateCpfCnpj(_ => {cpfCnpj: cpfCnpj})
-          }
-          mask="[000].[000].[000]-[00]"
-          returnKeyType=`go
-          keyboardType=`numberPad
-          style={styles##input}
-        />
-        {switch (form.cpfCnpjResult) {
-         | Some(Error(message)) =>
-           <View>
-             <Text style={styles##errorMessageText}>
-               message->React.string
-             </Text>
-           </View>
-         | Some(Ok(_))
-         | None => React.null
-         }}
-      </SafeAreaView>
+      <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
+        <SafeAreaView style={styles##wrapper}>
+          <Text style={styles##orange}>
+            {j|É sempre um prazer atender você!|j}->React.string
+          </Text>
+          <Text style={styles##txt}>
+            "Para iniciarmos o atendimento, informe por gentileza o seu CPF ou CNPJ:"
+            ->React.string
+          </Text>
+          <TextInputMask
+            onChangeText={cpfCnpj =>
+              form.updateCpfCnpj(_ => {cpfCnpj: cpfCnpj})
+            }
+            mask="[000].[000].[000]-[00]"
+            returnKeyType=`go
+            keyboardType=`numberPad
+            style={styles##input}
+          />
+          {switch (form.cpfCnpjResult) {
+           | Some(Error(message)) =>
+             <View>
+               <Text style={styles##errorMessageText}>
+                 message->React.string
+               </Text>
+             </View>
+           | Some(Ok(_))
+           | None => React.null
+           }}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
       <SubmitButton
         valid={form.valid}
         loading={form.submitting}
-        submit={_ => form.submit()}
+        submit={form.submit}
       />
     </KeyboardAvoidingView>
   </View>;

@@ -159,54 +159,40 @@ let make =
   let cpfCnpj =
     route.params->Option.mapWithDefault("", param => {param.cpfCnpj});
 
-  Js.log2("params", route.params);
-
   let form =
     SubscribeForm.useForm(
       ~initialInput={name: "", email: "", phone: "", iswhats: false},
       ~onSubmit=(output, cb) => {
-        Js.log2("Hello", cpfCnpj);
+      Js.Promise.(
+        UpdateUserMutation.commit(
+          ~environment,
+          ~cpfCnpj,
+          ~name=Some(output.name),
+          ~phone=Some(output.phone),
+          ~email=Some(output.email),
+          ~iswhats=Some(output.iswhats),
+        )
+        |> then_(_ => {
+             navigation->Navigators.RootNavigator.Navigation.navigate(
+               "Options",
+             );
+             cb.reset();
+             Keyboard.dismiss();
+             resolve();
+           })
+        |> catch(_ => {
+             Keyboard.dismiss();
+             cb.notifyOnFailure();
 
-        Js.Promise.(
-          UpdateUserMutation.commit(
-            ~environment,
-            ~cpfCnpj,
-            ~name=Some(output.name),
-            ~phone=Some(output.phone),
-            ~email=Some(output.email),
-            ~iswhats=Some(output.iswhats),
-          )
-          |> then_(_ => {
-               navigation->Navigators.RootNavigator.Navigation.navigate(
-                 "Options",
-               );
-               cb.reset();
-               Keyboard.dismiss();
-               resolve();
-             })
-          |> catch(error => {
-               cb.notifyOnFailure();
-               open ReactNative.ToastAndroid;
-               Keyboard.dismiss();
+             navigation->Navigators.RootNavigator.Navigation.navigate(
+               "Options",
+             );
 
-               Js.log(error);
-               showWithGravityAndOffset(
-                 {j|Não houve campos atualizados|j},
-                 long,
-                 bottom,
-                 ~xOffset=25.,
-                 ~yOffset=50.,
-               );
-               navigation->Navigators.RootNavigator.Navigation.navigate(
-                 "Options",
-               );
-
-               resolve();
-             })
-          |> ignore
-        );
-      },
-    );
+             resolve();
+           })
+        |> ignore
+      )
+    });
 
   <View style={styles##bg}>
     <View style={styles##container}>

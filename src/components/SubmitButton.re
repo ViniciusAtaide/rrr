@@ -46,13 +46,7 @@ let make = (~submit, ~valid, ~loading) => {
             Some(styles##txtBlk),
             valid() ? None : Some(styles##txtLight),
           ])}>
-          {loading
-             ? <Image
-                 source={Image.Source.fromRequired(
-                   Packager.require("../images/loading.gif"),
-                 )}
-               />
-             : "CONTINUAR"->React.string}
+          {loading ? "CARREGANDO"->React.string : "CONTINUAR"->React.string}
         </Text>
       </View>
     </TouchableNativeFeedback>

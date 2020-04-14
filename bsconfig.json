@@ -23,6 +23,7 @@
     "bs-fetch",
     "re-formality",
     "reason-react-navigation",
-    "reason-promise"
+    "reason-promise",
+    "reason-react-native-maps"
   ]
 }
