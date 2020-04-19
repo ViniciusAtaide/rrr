@@ -16,7 +16,6 @@ let styles =
           ~fontFamily="Montserrat-SemiBold",
           ~color="#fff",
           ~fontSize=24.,
-          ~fontWeight=`_600,
           (),
         ),
       "orange":
@@ -57,9 +56,7 @@ let make = (~navigation, ~route as _) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={_ =>
-            navigation->Navigators.RootNavigator.Navigation.navigate(
-              "Location",
-            )
+            navigation->Navigators.MapNavigator.Navigation.navigate("Map")
           }>
           <Text style={styles##txt}>
             {j|Encontrar o escritório mais perto de você|j}->React.string

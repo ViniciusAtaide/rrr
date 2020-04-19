@@ -680,8 +680,8 @@ type Place implements Node {
   """
   nodeId: ID!
   _id: Int!
-  latitude: String
-  longitude: String
+  latitude: String!
+  longitude: String!
   address: String
   name: String!
   email: String
@@ -768,8 +768,8 @@ An input for mutations affecting `Place`
 """
 input PlaceInput {
   _id: Int
-  latitude: String
-  longitude: String
+  latitude: String!
+  longitude: String!
   address: String
   name: String!
   email: String

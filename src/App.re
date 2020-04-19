@@ -4,6 +4,13 @@ let styles =
       ReactNative.StyleSheet.create({
         "scrollView": style(~backgroundColor=colors##lighter, ()),
         "body": style(~backgroundColor=colors##white, ()),
+        "txt":
+          style(
+            ~color="#fff",
+            ~fontSize=26.,
+            ~fontFamily="Montserrat-Regular",
+            (),
+          ),
         "center":
           style(
             ~alignItems=`center,
@@ -21,7 +28,7 @@ module Loading = {
   [@react.component]
   let make = () =>
     <View style={styles##center}>
-      <Text> "Loading"->React.string </Text>
+      <Text style={styles##txt}> "Carregando..."->React.string </Text>
     </View>;
 };
 
