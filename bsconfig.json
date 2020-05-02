@@ -20,11 +20,13 @@
     "reason-react",
     "reason-react-native",
     "reason-relay",
-    "bs-fetch",
     "re-formality",
     "reason-react-navigation",
     "reason-promise",
     "reason-react-native-maps",
-    "@reason-react-native/svg"
+    "@reason-react-native/svg",
+    "bs-axios",
+    "bs-fetch",
+    "bs-qs"
   ]
 }

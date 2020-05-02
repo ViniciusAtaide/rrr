@@ -1,48 +1,181 @@
 open ReactNavigation;
 
+let styles =
+  ReactNative.(
+    Style.{
+      "header":
+        style(
+          ~backgroundColor="rgb(36, 36, 36)",
+          ~shadowColor="transparent",
+          (),
+        ),
+      "title": style(~color="white", ()),
+    }
+    ->StyleSheet.create
+  );
+
 module MainStackScreen = {
+  let rootOptions = _ =>
+    ReactNative.Platform.(
+      Navigators.RootNavigator.options(
+        ~headerShown=os === ios,
+        ~headerStyle=styles##header,
+        ~title="",
+        ~headerTintColor="white",
+        ~headerTransparent=true,
+        ~headerBackTitleVisible=false,
+        (),
+      )
+    );
+  // open ReactNative;
   [@react.component]
   let make = (~navigation as _, ~route as _) =>
-    <Navigators.RootNavigator.Navigator mode=`card headerMode=`none>
-      <Navigators.RootNavigator.Screen name="Welcome" component=Welcome.make />
-      <Navigators.RootNavigator.Screen name="Guest" component=Guest.make />
-      <Navigators.RootNavigator.Screen name="Contact" component=Contact.make />
-      <Navigators.RootNavigator.Screen name="Speak" component=Speak.make />
-      <Navigators.RootNavigator.Screen name="Media" component=Media.make />
-      <Navigators.RootNavigator.Screen name="Options" component=Options.make />
+    <Navigators.RootNavigator.Navigator mode=`card>
+      <Navigators.RootNavigator.Screen
+        name="Welcome"
+        component=Welcome.make
+        options={_ =>
+          Navigators.RootNavigator.options(
+            ~headerShown=false,
+            ~headerStyle=styles##header,
+            (),
+          )
+        }
+      />
+      <Navigators.RootNavigator.Screen
+        name="Guest"
+        component=Guest.make
+        options=rootOptions
+      />
+      <Navigators.RootNavigator.Screen
+        name="Contact"
+        component=Contact.make
+        options=rootOptions
+      />
+      <Navigators.RootNavigator.Screen
+        name="Speak"
+        component=Speak.make
+        options=rootOptions
+      />
+      <Navigators.RootNavigator.Screen
+        name="Media"
+        component=Media.make
+        options=rootOptions
+      />
     </Navigators.RootNavigator.Navigator>;
 };
-
 module SubscribeStackScreen = {
   include Navigators.SubscribeNavigator;
+  let subscribeOptions = _ =>
+    ReactNative.Platform.(
+      Navigators.SubscribeNavigator.options(
+        ~headerShown=os === ios,
+        ~headerStyle=styles##header,
+        ~title="",
+        ~headerTransparent=true,
+        ~headerTintColor="white",
+        ~headerBackTitleVisible=false,
+        (),
+      )
+    );
 
   [@react.component]
-  let make = (~navigation as _, ~route as _) => {
-    <Navigators.SubscribeNavigator.Navigator
-      mode=`card headerMode=`none initialRouteName="Credentials">
-      <Navigators.RootNavigator.Screen
-        name="Credentials"
-        component=Credentials.make
-      />
-      <Navigators.SubscribeNavigator.Screen
-        name="Subscribe"
-        component=Subscribe.make
-      />
-    </Navigators.SubscribeNavigator.Navigator>;
+  let make = (~navigation, ~route as _) => {
+    ReactNative.(
+      <Navigators.SubscribeNavigator.Navigator
+        mode=`card initialRouteName="Credentials">
+        <Navigators.SubscribeNavigator.Screen
+          name="Credentials"
+          component=Credentials.make
+          options={_ =>
+            ReactNative.Platform.(
+              Navigators.SubscribeNavigator.options(
+                ~headerShown=os === ios,
+                ~headerStyle=styles##header,
+                ~title="",
+                ~headerTransparent=true,
+                ~headerTintColor="white",
+                ~headerLeft=
+                  _ =>
+                    <TouchableOpacity
+                      onPress={_ =>
+                        navigation->Navigators.SubscribeNavigator.Navigation.goBack()
+                      }>
+                      <Text
+                        style={Style.style(~color="white", ~fontSize=40., ())}>
+                        "<"->React.string
+                      </Text>
+                    </TouchableOpacity>,
+                ~headerBackTitleVisible=false,
+                (),
+              )
+            )
+          }
+        />
+        <Navigators.SubscribeNavigator.Screen
+          name="Subscribe"
+          component=Subscribe.make
+          options=subscribeOptions
+        />
+        <Navigators.SubscribeNavigator.Screen
+          name="Options"
+          component=Options.make
+          options=subscribeOptions
+        />
+      </Navigators.SubscribeNavigator.Navigator>
+    );
   };
 };
 
 module MapStackScreen = {
+  open ReactNative;
   include Navigators.MapNavigator;
+  let mapOptions = _ =>
+    ReactNative.Platform.(
+      Navigators.MapNavigator.options(
+        ~headerShown=os === ios,
+        ~title="",
+        ~headerTransparent=true,
+        ~headerTintColor="black",
+        ~headerBackTitleVisible=false,
+        (),
+      )
+    );
 
   [@react.component]
-  let make = (~navigation as _, ~route as _) => {
-    <Navigators.MapNavigator.Navigator
-      mode=`card headerMode=`none initialRouteName="Init">
-      <Navigators.MapNavigator.Screen name="Init" component=Map.make />
+  let make = (~navigation, ~route as _) => {
+    <Navigators.MapNavigator.Navigator mode=`card initialRouteName="Init">
+      <Navigators.MapNavigator.Screen
+        name="Init"
+        component=Map.make
+        options={_ =>
+          ReactNative.Platform.(
+            Navigators.MapNavigator.options(
+              ~headerShown=os === ios,
+              ~title="",
+              ~headerTransparent=true,
+              ~headerTintColor="black",
+              ~headerBackTitleVisible=false,
+              ~headerLeft=
+                _ =>
+                  <TouchableOpacity
+                    onPress={_ =>
+                      navigation->Navigators.MapNavigator.Navigation.goBack()
+                    }>
+                    <Text
+                      style={Style.style(~color="white", ~fontSize=40., ())}>
+                      "<"->React.string
+                    </Text>
+                  </TouchableOpacity>,
+              (),
+            )
+          )
+        }
+      />
       <Navigators.MapNavigator.Screen
         name="Location"
         component=Location.make
+        options=mapOptions
       />
     </Navigators.MapNavigator.Navigator>;
   };

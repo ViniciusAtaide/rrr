@@ -17,7 +17,7 @@ let styles =
         ),
       "txtBlk":
         style(
-          ~fontFamily="Montserrat",
+          ~fontFamily="Montserrat-Regular",
           ~color="black",
           ~fontSize=24.,
           ~lineHeight=48.,
@@ -37,9 +37,7 @@ let styles =
 [@react.component]
 let make = (~submit, ~valid, ~loading) => {
   <View style={styles##buttonWrapper}>
-    <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Background.ripple("#000", false)}
-      onPress={_ => loading ? () : submit()}>
+    <TouchableHighlight onPress={_ => loading ? () : submit()}>
       <View style={styles##button}>
         <Text
           style={Style.listOption([
@@ -49,6 +47,6 @@ let make = (~submit, ~valid, ~loading) => {
           {loading ? "CARREGANDO"->React.string : "CONTINUAR"->React.string}
         </Text>
       </View>
-    </TouchableNativeFeedback>
+    </TouchableHighlight>
   </View>;
 };

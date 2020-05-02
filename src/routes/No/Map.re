@@ -1,6 +1,10 @@
 [@bs.module "./Map/location.json"]
 external mapStyle: array(Js.Json.t) = "map";
 
+type timerId;
+[@bs.val] external setTimeout: (unit => unit, int) => timerId = "setTimeout";
+[@bs.val] external clearTimeout: timerId => unit = "clearTimeout";
+
 module Query = [%relay.query
   {|
   query MapQuery {
@@ -35,19 +39,21 @@ let styles =
           ~flex=1.,
           (),
         ),
-      "txt":
+      "txtInput":
         style(
-          ~fontFamily="Montserrat-SemiBold",
-          ~color="white",
-          ~paddingTop=40.->dp,
+          ~fontFamily="Montserrat-Regular",
+          ~color="#000",
+          ~backgroundColor="white",
           ~fontSize=22.,
+          ~padding=10.->dp,
+          ~width=100.->pct,
           (),
         ),
       "orange":
         style(
           ~color="rgb(254,80,0)",
           ~paddingTop=40.->dp,
-          ~fontFamily="Montserrat-Bold",
+          ~fontFamily="Montserrat-Regular",
           ~fontSize=22.,
           (),
         ),
@@ -72,15 +78,40 @@ let styles =
 let make = (~navigation, ~route as _) => {
   let query = Query.use(~variables=(), ());
 
+  let (cidade, setCidade) = React.useState(_ => "");
+  let mapRef = React.useRef(Js.Nullable.null);
+
+  React.useEffect1(
+    () => {
+      let t =
+        setTimeout(
+          () => {
+            mapRef
+            ->React.Ref.current
+            ->Js.Nullable.toOption
+            ->Belt.Option.map(map =>
+                map->ReactNativeMaps.MapView.fitToElements(true)
+              )
+            ->ignore
+          },
+          2000,
+        );
+
+      Some(_ => clearTimeout(t));
+    },
+    [|cidade|],
+  );
+
   ReactNativeMaps.(
     ReactNative.(
       <View style={styles##bg}>
-        <View style={styles##container}>
+        <KeyboardAvoidingView behavior=`height style={styles##container}>
           <Text style={styles##orange}>
             {j|Encontre por estado|j}->React.string
           </Text>
           <View style={styles##mapContainer}>
             <MapView
+              ref=mapRef
               provider=`google
               style=StyleSheet.absoluteFillObject
               customMapStyle=mapStyle
@@ -93,24 +124,37 @@ let make = (~navigation, ~route as _) => {
               {switch (query.allPlaces) {
                | Some(places) =>
                  places.nodes
+                 ->Belt.Array.keep(location =>
+                     switch (location) {
+                     | Some(location) =>
+                       cidade === ""
+                         ? true
+                         : location.name
+                           |> Js.String.toLowerCase
+                           |> Js.String.includes(
+                                cidade |> Js.String.toLowerCase,
+                              )
+                     | None => false
+                     }
+                   )
                  ->Belt.Array.map(location =>
                      switch (location) {
                      | Some(location) =>
                        <Marker
                          key={string_of_int(location._id)}
-                         onPress={_ =>
+                         onPress={_ => {
+                           Keyboard.dismiss();
                            navigation->Navigators.MapNavigator.Navigation.navigateWithParams(
                              "Location",
                              {location: location},
-                           )
-                         }
+                           );
+                         }}
                          title={location.name}
                          image={Image.Source.fromRequired(
                            Packager.require("./Map/map_point.png"),
                          )}
                          coordinate={
                            "latitude": location.latitude->float_of_string,
-
                            "longitude": location.longitude->float_of_string,
                          }
                        />
@@ -122,10 +166,12 @@ let make = (~navigation, ~route as _) => {
                }}
             </MapView>
           </View>
-          <Text style={styles##txt}>
-            {j|Ou busque por cidade|j}->React.string
-          </Text>
-        </View>
+          <TextInput
+            style={Style.list([styles##txtInput])}
+            onChangeText={cidade => setCidade(_ => {cidade})}
+            placeholder="Ou busque por cidade"
+          />
+        </KeyboardAvoidingView>
       </View>
     )
   );

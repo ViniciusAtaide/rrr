@@ -110,11 +110,7 @@ let make = (~navigation, ~route as _) => {
             ])}
           />
           <View style={Style.list([styles##grayButton, styles##padding])} />
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Background.ripple(
-              "#fff",
-              true,
-            )}
+          <TouchableHighlight
             onPress={_ =>
               navigation->Navigators.RootNavigator.Navigation.navigate(
                 "Guest",
@@ -125,19 +121,15 @@ let make = (~navigation, ~route as _) => {
                 {j|NÃO|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Background.ripple(
-              "#fff",
-              true,
-            )}
+          </TouchableHighlight>
+          <TouchableHighlight
             onPress={_ =>
               navigation->Navigators.RootNavigator.Navigation.navigate("Auth")
             }>
             <View style={styles##orangeButton}>
               <Text style={styles##buttonText}> "SIM"->React.string </Text>
             </View>
-          </TouchableNativeFeedback>
+          </TouchableHighlight>
         </View>
         <View style={styles##horizontal}>
           <View style={Style.list([styles##grayButton, styles##half])} />

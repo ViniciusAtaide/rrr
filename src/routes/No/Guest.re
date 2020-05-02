@@ -16,6 +16,7 @@ let styles =
           ~fontFamily="Montserrat-SemiBold",
           ~color="#fff",
           ~fontSize=24.,
+          ~marginVertical=10.->pct,
           (),
         ),
       "orange":
@@ -46,32 +47,36 @@ let make = (~navigation, ~route as _) => {
         <Text style={styles##orange}>
           {j|O que deseja?!|j}->React.string
         </Text>
-        <TouchableOpacity
-          onPress={_ =>
-            navigation->Navigators.RootNavigator.Navigation.navigate("Speak")
-          }>
-          <Text style={styles##txt}>
-            {j|Falar com um atendente|j}->React.string
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={_ =>
-            navigation->Navigators.MapNavigator.Navigation.navigate("Map")
-          }>
-          <Text style={styles##txt}>
-            {j|Encontrar o escritório mais perto de você|j}->React.string
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={_ =>
-            navigation->Navigators.RootNavigator.Navigation.navigate(
-              "Contact",
-            )
-          }>
-          <Text style={styles##txt}>
-            {j|Fazer elogios ou reclamações|j}->React.string
-          </Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            onPress={_ =>
+              navigation->Navigators.RootNavigator.Navigation.navigate(
+                "Speak",
+              )
+            }>
+            <Text style={styles##txt}>
+              {j|Falar com um atendente|j}->React.string
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={_ =>
+              navigation->Navigators.MapNavigator.Navigation.navigate("Map")
+            }>
+            <Text style={styles##txt}>
+              {j|Encontrar o escritório mais perto de você|j}->React.string
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={_ =>
+              navigation->Navigators.RootNavigator.Navigation.navigate(
+                "Contact",
+              )
+            }>
+            <Text style={styles##txt}>
+              {j|Fazer elogios ou reclamações|j}->React.string
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles##center}>
           <Image
             source={Image.Source.fromRequired(

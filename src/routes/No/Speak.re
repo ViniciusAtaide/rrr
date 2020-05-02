@@ -43,22 +43,6 @@ let styles =
           ~paddingTop=20.->dp,
           (),
         ),
-      "txtBlk":
-        style(
-          ~fontFamily="Montserrat-Bold",
-          ~color="black",
-          ~fontSize=24.,
-          ~lineHeight=48.,
-          (),
-        ),
-      "txtGray":
-        style(
-          ~fontFamily="Montserrat-Light",
-          ~color="gray",
-          ~fontSize=24.,
-          ~lineHeight=48.,
-          (),
-        ),
       "inputWrapper": style(~marginVertical=2.5->dp, ~width=100.->pct, ()),
       "input": style(~backgroundColor="#fff", ~height=40.->dp, ()),
       "orange":
@@ -68,18 +52,6 @@ let styles =
           ~fontSize=22.,
           (),
         ),
-
-      "button":
-        style(
-          ~fontFamily="Montserrat-SemiBold",
-          ~backgroundColor="#fff",
-          ~fontSize=28.,
-          ~width=100.->pct,
-          ~alignItems=`center,
-          (),
-        ),
-      "buttonWrapper": style(~flex=1., ~justifyContent=`flexEnd, ()),
-      "errorMessage": style(~opacity=0., ()),
       "errorMessageText":
         style(
           ~fontSize=16.,
@@ -87,17 +59,14 @@ let styles =
           ~color="rgb(254,80,0)",
           (),
         ),
-      "errorMessageActive": style(~opacity=1., ()),
     })
   );
 
 [@react.component]
 let make = (~navigation as _, ~route as _) => {
-  open React;
-  open Belt;
   open ReactNative;
 
-  let emailRef = useRef(Js.Nullable.null);
+  let emailRef = React.useRef(Js.Nullable.null);
 
   let form =
     SpeakForm.useForm(
@@ -113,11 +82,11 @@ let make = (~navigation as _, ~route as _) => {
           Linking.openURL(url)
           |> then_(() => {
                cb.reset();
-               resolve(true);
+               resolve();
              })
           |> catch(_ => {
                cb.notifyOnFailure();
-               resolve(false);
+               resolve();
              })
         )
         |> ignore;
@@ -129,7 +98,7 @@ let make = (~navigation as _, ~route as _) => {
       <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
         <SafeAreaView style={styles##wrapper}>
           <Text style={styles##orange}>
-            {j|Vamos conversar?!|j}->React.string
+            {j|Vamos conversar?|j}->React.string
           </Text>
           <View style={styles##inputWrapper}>
             <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
@@ -144,7 +113,7 @@ let make = (~navigation as _, ~route as _) => {
                 emailRef
                 ->React.Ref.current
                 ->Js.Nullable.toOption
-                ->Option.map(email => email->TextInput.focus)
+                ->Belt.Option.map(email => email->TextInput.focus)
                 ->ignore
               }}
             />

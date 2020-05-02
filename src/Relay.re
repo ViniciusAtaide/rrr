@@ -38,7 +38,6 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
                    ~xOffset=0.,
                    ~yOffset=50.,
                  )
-                 
                );
 
                reject(

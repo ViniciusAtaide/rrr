@@ -1,3 +1,14 @@
+module Query = [%relay.query
+  {|
+  query OptionsQuery($cpfCnpj: String!) {
+    userByCpfCnpj(cpfCnpj: $cpfCnpj) {
+      name
+      cpfCnpj
+    }
+  }
+|}
+];
+
 let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
@@ -5,7 +16,7 @@ let styles =
       "top": style(~paddingHorizontal=12.5->dp, ()),
       "container":
         style(
-          ~justifyContent=`flexStart,
+          ~justifyContent=`center,
           ~height=100.->pct,
           ~paddingTop=10.->dp,
           ~paddingHorizontal=12.5->dp,
@@ -40,8 +51,7 @@ let styles =
           ~backgroundColor="rgb(144,144,144)",
           ~justifyContent=`center,
           ~padding=5.->dp,
-          ~marginVertical=12.5->dp,
-          ~marginHorizontal=12.5->dp,
+          ~margin=12.5->dp,
           ~flexGrow=1.,
           ~height=140.->dp,
           ~flexBasis=42.->pct,
@@ -51,27 +61,45 @@ let styles =
       "dna":
         style(
           ~position=`absolute,
-          ~height=100.->pct,
-          ~width=100.->pct,
+          ~top=(-15.)->pct,
           ~right=0.->dp,
+          ~bottom=0.->dp,
+          ~left=(-20.)->pct,
           ~zIndex=-1,
-          ~resizeMode=`repeat,
+          ~resizeMode=`cover,
           (),
         ),
     })
   );
 
 [@react.component]
-let make = (~navigation, ~route as _) => {
+let make =
+    (
+      ~navigation,
+      ~route:
+         ReactNavigation.Core.route(
+           Navigators.SubscribeNavigator.StakeParams.params,
+         ),
+    ) => {
+  let cpfCnpj =
+    route.params->Belt.Option.mapWithDefault("", param => {param.cpfCnpj});
+  let query = Query.use(~variables={cpfCnpj: cpfCnpj}, ());
+  let user =
+    query.userByCpfCnpj
+    ->Belt.Option.getWithDefault({name: None, cpfCnpj: ""});
+  Js.log(cpfCnpj);
+  let name = user.name->Belt.Option.getWithDefault("");
+  let cpf = user.cpfCnpj;
+
   ReactNative.(
     <View style={styles##bg}>
+      <ReactNativeSvg.SvgXml
+        style={styles##dna}
+        width={125.->Style.pct}
+        height={125.->Style.pct}
+        xml=Svgs.dna
+      />
       <View style={styles##container}>
-        <ImageBackground
-          style={styles##dna}
-          source={Image.Source.fromRequired(
-            Packager.require("./Options/dna.png"),
-          )}
-        />
         <View style={styles##top}>
           <Image
             style={styles##signature}
@@ -80,63 +108,93 @@ let make = (~navigation, ~route as _) => {
             )}
           />
           <Text style={styles##orange}>
-            {j|ESCRITÓRIO DIGITAL.|j}->React.string
+            {j|ESCRITÓRIO DIGITAL|j}->React.string
           </Text>
         </View>
         <View style={styles##horizontal}>
-          <TouchableNativeFeedback
+          <TouchableHighlight
+            style={styles##button}
             onPress={_ =>
               Linking.openURL(
                 "https://www.marcosinacio.adv.br/inteligencia-juridica",
               )
               |> ignore
             }>
-            <View style={styles##button}>
+            <View>
               <Text style={styles##txt}>
-                {j|CONTEÚDO JURÍDICO|j}->React.string
+                {j|Conteúdo Jurídico|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
-            <View style={styles##button}>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles##button}
+            onPress={_ => {
+              let text = {j|Olá! Sou $name, CPF $cpf. Gostaria de falar com um advogado.|j};
+              let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
+
+              Linking.openURL(url)->ignore;
+            }}>
+            <View>
               <Text style={styles##txt}>
                 {j|Falar com advogado|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
-            <View style={styles##button}>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles##button}
+            onPress={_ => {
+              let text = {j|Olá! Sou $name, CPF $cpf. Gostaria de consultar meu processo.|j};
+              let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
+
+              Linking.openURL(url)->ignore;
+            }}>
+            <View>
               <Text style={styles##txt}>
                 {j|Consultar meu processo|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
-            <View style={styles##button}>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles##button}
+            onPress={_ => {
+              let text = {j|Olá! Sou $name, CPF $cpf. Gostaria de falar com uma atendente.|j};
+              let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
+
+              Linking.openURL(url)->ignore;
+            }}>
+            <View>
               <Text style={styles##txt}>
                 {j|Falar com atendente|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
-            <View style={styles##button}>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles##button}
+            onPress={_ => {
+              let text = {j|Olá! Sou $name, CPF $cpf e tenho um amigo que precisa de um advogado.|j};
+              let url = {j|whatsapp://send?text=$text&phone=5583999651707|j};
+
+              Linking.openURL(url)->ignore;
+            }}>
+            <View>
               <Text style={styles##txt}>
                 {j|Meu amigo precisa de um advogado|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles##button}
             onPress={_ =>
               navigation->Navigators.RootNavigator.Navigation.navigate(
                 "Contact",
               )
             }>
-            <View style={styles##button}>
+            <View>
               <Text style={styles##txt}>
                 {j|Elogios e críticas|j}->React.string
               </Text>
             </View>
-          </TouchableNativeFeedback>
+          </TouchableHighlight>
         </View>
       </View>
     </View>

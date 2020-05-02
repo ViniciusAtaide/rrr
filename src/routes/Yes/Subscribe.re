@@ -66,7 +66,7 @@ let styles =
           ~flex=1.,
           (),
         ),
-      "wrapper": style(~flex=1., ~justifyContent=`flexStart, ()),
+      "wrapper": style(~flex=1., ~justifyContent=`center, ()),
 
       "txt":
         style(
@@ -127,14 +127,14 @@ let styles =
           ~height=40.->dp,
           ~width=40.->dp,
           ~alignItems=`center,
+          ~justifyContent=`center,
           ~marginTop=10.->dp,
           ~marginHorizontal=5.->dp,
-          ~justifyContent=`flexEnd,
           ~borderRadius=100.,
           (),
         ),
       "radioActive": style(~backgroundColor="rgb(254,80,0)", ()),
-      "txtRadio": style(~lineHeight=40., ()),
+      "txtRadio": style(~marginTop=(-20.)->dp, ()),
     })
   );
 
@@ -148,7 +148,6 @@ let make =
          ),
     ) => {
   open React;
-  open Belt;
   open ReactNative;
 
   let environment = ReasonRelay.useEnvironmentFromContext();
@@ -157,7 +156,7 @@ let make =
   let numberRef = useRef(Js.Nullable.null);
 
   let cpfCnpj =
-    route.params->Option.mapWithDefault("", param => {param.cpfCnpj});
+    route.params->Belt.Option.mapWithDefault("", param => {param.cpfCnpj});
 
   let form =
     SubscribeForm.useForm(
@@ -173,8 +172,9 @@ let make =
           ~iswhats=Some(output.iswhats),
         )
         |> then_(_ => {
-             navigation->Navigators.RootNavigator.Navigation.navigate(
+             navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
                "Options",
+               {cpfCnpj: cpfCnpj},
              );
              cb.reset();
              Keyboard.dismiss();
@@ -184,8 +184,9 @@ let make =
              Keyboard.dismiss();
              cb.notifyOnFailure();
 
-             navigation->Navigators.RootNavigator.Navigation.navigate(
+             navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
                "Options",
+               {cpfCnpj: cpfCnpj},
              );
 
              resolve();
@@ -199,7 +200,7 @@ let make =
       <TouchableWithoutFeedback onPress={_ => Keyboard.dismiss()}>
         <View style={styles##wrapper}>
           <Text style={styles##orange}>
-            {j|Vamos conversar?!|j}->React.string
+            {j|Vamos conversar?|j}->React.string
           </Text>
           <View style={styles##inputWrapper}>
             <Text style={styles##txt}> "Qual seu nome?"->React.string </Text>
@@ -214,7 +215,7 @@ let make =
                 numberRef
                 ->React.Ref.current
                 ->Js.Nullable.toOption
-                ->Option.map(number => number->TextInput.focus)
+                ->Belt.Option.map(number => number->TextInput.focus)
                 ->ignore
               }}
             />
@@ -244,7 +245,7 @@ let make =
                 emailRef
                 ->React.Ref.current
                 ->Js.Nullable.toOption
-                ->Option.map(email => email->TextInput.focus)
+                ->Belt.Option.map(email => email->TextInput.focus)
                 ->ignore
               }}
             />
@@ -257,11 +258,7 @@ let make =
                   Some(styles##radio),
                   form.input.iswhats ? Some(styles##radioActive) : None,
                 ])}>
-                <TouchableNativeFeedback
-                  background={TouchableNativeFeedback.Background.ripple(
-                    "#fff",
-                    true,
-                  )}
+                <TouchableHighlight
                   onPress={_ =>
                     form.updateIswhats(input => {...input, iswhats: true})
                   }>
@@ -273,18 +270,14 @@ let make =
                     ])}>
                     {j|Sim|j}->React.string
                   </Text>
-                </TouchableNativeFeedback>
+                </TouchableHighlight>
               </View>
               <View
                 style={Style.listOption([
                   Some(styles##radio),
                   form.input.iswhats ? None : Some(styles##radioActive),
                 ])}>
-                <TouchableNativeFeedback
-                  background={TouchableNativeFeedback.Background.ripple(
-                    "#fff",
-                    true,
-                  )}
+                <TouchableHighlight
                   onPress={_ =>
                     form.updateIswhats(input => {...input, iswhats: false})
                   }>
@@ -296,7 +289,7 @@ let make =
                     ])}>
                     {j|Não|j}->React.string
                   </Text>
-                </TouchableNativeFeedback>
+                </TouchableHighlight>
               </View>
             </View>
             {switch (form.phoneResult) {

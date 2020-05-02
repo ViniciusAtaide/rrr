@@ -4,8 +4,23 @@ let styles =
       "bg":
         style(~backgroundColor="rgb(224, 224, 224)", ~height=100.->pct, ()),
       "container":
-        style(~paddingTop=30.->dp, ~paddingBottom=10.->dp, ~flex=1., ()),
-      "map": style(~position=`absolute, ~top=(-25.)->dp, ~right=10.->dp, ()),
+        style(
+          ~position=`relative,
+          ~paddingTop=
+            ReactNative.Platform.os === ReactNative.Platform.ios
+              ? 80.->dp : 30.->dp,
+          ~flex=1.,
+          (),
+        ),
+      "map":
+        style(
+          ~position=`absolute,
+          ~top=
+            ReactNative.Platform.os === ReactNative.Platform.ios
+              ? 25.->dp : (-25.)->dp,
+          ~right=10.->dp,
+          (),
+        ),
       "subtitle":
         style(
           ~fontFamily="Montserrat-Bold",
@@ -17,18 +32,9 @@ let styles =
         style(
           ~fontFamily="Montserrat-Bold",
           ~marginTop=10.->dp,
-          ~marginBottom=20.->dp,
+          ~marginBottom=50.->dp,
           ~marginLeft=10.->dp,
           ~fontSize=16.,
-          ~textTransform=`uppercase,
-          (),
-        ),
-      "titleInverted":
-        style(
-          ~fontFamily="Montserrat-Bold",
-          ~fontSize=16.,
-          ~marginLeft=(-12.)->dp,
-          ~marginVertical=5.->dp,
           ~textTransform=`uppercase,
           (),
         ),
@@ -53,7 +59,7 @@ let styles =
           ~marginVertical=10.->dp,
           (),
         ),
-      "txt": style(~fontFamily="Montserrat", ()),
+      "txt": style(~fontFamily="Montserrat-Regular", ()),
       "bold": style(~fontFamily="Montserrat-Bold", ()),
       "equal": style(~justifyContent=`flexEnd, ()),
       "email":
@@ -82,12 +88,22 @@ let styles =
           ~textAlign=`center,
           ~fontSize=12.,
           ~width=250.->dp,
+          ~fontFamily="Montserrat-Bold",
           ~marginVertical=15.->dp,
           (),
         ),
       "iconSize": style(~height=60.->dp, ~width=60.->dp, ()),
       "iconBottom": style(~width=10.->dp, ()),
       "flex": style(~flex=1., ~alignItems=`center, ()),
+      "address":
+        style(
+          ~width=250.->dp,
+          ~alignSelf=`center,
+          ~textAlign=`center,
+          ~fontFamily="Montserrat-Regular",
+          ~marginTop=10.->dp,
+          (),
+        ),
     })
   );
 
@@ -104,13 +120,13 @@ let make =
 
   ReactNative.(
     <ScrollView style={styles##bg}>
-      <ReactNativeSvg.SvgXml
-        style={styles##map}
-        xml=Svgs.mapa
-        width={130.->Style.dp}
-        height={175.->Style.dp}
-      />
       <View style={styles##container}>
+        <ReactNativeSvg.SvgXml
+          style={styles##map}
+          xml=Svgs.mapa
+          width={130.->Style.dp}
+          height={175.->Style.dp}
+        />
         <Text style={styles##subtitle}>
           {j|NOSSO ESCRITÓRIO EM|j}->React.string
         </Text>
@@ -118,23 +134,21 @@ let make =
            React.null,
            loc => {
              let email = loc.email->Belt.Option.getWithDefault("");
-             let picture =
-               loc.name |> Js.String.replaceByRe([%re "/[^A-Z]/g"], "");
-             Js.log(picture);
-             <>
+             let picture = loc.name;
+             let address = loc.address->Belt.Option.getWithDefault("");
+
+             <View>
                <Text style={styles##title}> {React.string(loc.name)} </Text>
-               <Text style={styles##titleInverted}>
-                 {React.string(loc.name)}
-               </Text>
                <ImageBackground
                  style={styles##image}
                  source={Image.Source.fromUriSource(
                    Image.uriSource(
-                     ~uri={j|https://mia.adv.br/$picture.jpeg|j},
+                     ~uri={j|https://mia.adv.br/$picture.jpg|j},
                      (),
                    ),
                  )}
                />
+               <Text style={styles##address}> address->React.string </Text>
                <View style={styles##center}>
                  <View
                    style={Style.list([styles##horizontal, styles##center])}>
@@ -260,8 +274,9 @@ let make =
                          |> ignore
                        }>
                        <ReactNativeSvg.SvgXml
-                         width={25.->Style.dp}
-                         height={27.->Style.dp}
+                         style={Style.style(~marginTop=(-41.)->Style.dp, ())}
+                         width={82.->Style.dp}
+                         height={128.->Style.dp}
                          xml=Svgs.linked
                        />
                      </TouchableOpacity>
@@ -295,7 +310,7 @@ let make =
                    </View>
                  </View>
                </View>
-             </>;
+             </View>;
            },
          )}
       </View>

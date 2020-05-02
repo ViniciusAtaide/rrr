@@ -54,7 +54,7 @@ let make = (~navigation as _, ~route as _) => {
         </View>
         <View style={styles##icons}>
           <View style={styles##line}>
-            <TouchableNativeFeedback
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL("https://www.instagram.com/marcosinacio.adv/")
                 |> ignore
@@ -65,8 +65,8 @@ let make = (~navigation as _, ~route as _) => {
                   Packager.require("./Media/Insta-01.png"),
                 )}
               />
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback
+            </TouchableHighlight>
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL(
                   "https://www.facebook.com/MarcosInacioAdvogados/",
@@ -79,8 +79,8 @@ let make = (~navigation as _, ~route as _) => {
                   Packager.require("./Media/Face-01.png"),
                 )}
               />
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback
+            </TouchableHighlight>
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL("https://www.marcosinacio.adv.br/") |> ignore
               }>
@@ -88,10 +88,10 @@ let make = (~navigation as _, ~route as _) => {
                 style={Style.list([styles##iconSize])}
                 source={fromRequired(Packager.require("./Media/Site.png"))}
               />
-            </TouchableNativeFeedback>
+            </TouchableHighlight>
           </View>
           <View style={styles##line}>
-            <TouchableNativeFeedback
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL(
                   "https://www.linkedin.com/company/marcos-in%C3%A1cio-advogados/",
@@ -104,8 +104,8 @@ let make = (~navigation as _, ~route as _) => {
                   Packager.require("./Media/Linked-01.png"),
                 )}
               />
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback
+            </TouchableHighlight>
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL("https://bit.ly/2Fcl1mI") |> ignore
               }>
@@ -115,8 +115,8 @@ let make = (~navigation as _, ~route as _) => {
                   Packager.require("./Media/Tube-01.png"),
                 )}
               />
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback
+            </TouchableHighlight>
+            <TouchableHighlight
               onPress={_ =>
                 Linking.openURL("https://twitter.com/miadvocacia") |> ignore
               }>
@@ -126,7 +126,7 @@ let make = (~navigation as _, ~route as _) => {
                   Packager.require("./Media/Twitter-01.png"),
                 )}
               />
-            </TouchableNativeFeedback>
+            </TouchableHighlight>
           </View>
         </View>
       </View>

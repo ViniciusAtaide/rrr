@@ -122,8 +122,9 @@ let make = (~navigation, ~route as _) => {
 
                switch (user.name) {
                | Some(_) =>
-                 navigation->Navigators.RootNavigator.Navigation.navigate(
+                 navigation->Navigators.SubscribeNavigator.Navigation.navigateWithParams(
                    "Options",
+                   {cpfCnpj: output.cpfCnpj},
                  );
                  cb.reset();
                  resolve();
