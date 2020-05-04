@@ -44,7 +44,13 @@ let styles =
           (),
         ),
       "inputWrapper": style(~marginVertical=2.5->dp, ~width=100.->pct, ()),
-      "input": style(~backgroundColor="#fff", ~height=40.->dp, ()),
+      "input":
+        style(
+          ~backgroundColor="#fff",
+          ~fontFamily="Montserrat-Regular",
+          ~height=40.->dp,
+          (),
+        ),
       "orange":
         style(
           ~color="rgb(254,80,0)",
@@ -134,6 +140,7 @@ let make = (~navigation as _, ~route as _) => {
             </Text>
             <TextInput
               returnKeyType=`go
+              keyboardType=`emailAddress
               style={styles##input}
               ref=emailRef
               onChangeText={email =>

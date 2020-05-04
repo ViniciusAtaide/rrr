@@ -94,7 +94,13 @@ let styles =
           (),
         ),
       "inputWrapper": style(~width=100.->pct, ()),
-      "input": style(~backgroundColor="#fff", ~height=40.->dp, ()),
+      "input":
+        style(
+          ~backgroundColor="#fff",
+          ~fontFamily="Montserrat-Regular",
+          ~height=40.->dp,
+          (),
+        ),
       "orange":
         style(
           ~color="rgb(254,80,0)",

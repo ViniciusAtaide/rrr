@@ -81,20 +81,37 @@ let make = (~navigation, ~route as _) => {
   let (cidade, setCidade) = React.useState(_ => "");
   let mapRef = React.useRef(Js.Nullable.null);
 
+  let places =
+    query.allPlaces
+    ->Belt.Option.mapWithDefault([||], places =>
+        places.nodes
+        ->Belt.Array.keep(location =>
+            location->Belt.Option.mapWithDefault(false, location =>
+              cidade === ""
+                ? true
+                : location.name
+                  |> Js.String.toLowerCase
+                  |> Js.String.includes(cidade |> Js.String.toLowerCase)
+            )
+          )
+      );
+
   React.useEffect1(
     () => {
       let t =
         setTimeout(
           () => {
-            mapRef
-            ->React.Ref.current
-            ->Js.Nullable.toOption
-            ->Belt.Option.map(map =>
-                map->ReactNativeMaps.MapView.fitToElements(true)
-              )
-            ->ignore
+            places->Belt.Array.length > 0
+              ? mapRef
+                ->React.Ref.current
+                ->Js.Nullable.toOption
+                ->Belt.Option.map(map =>
+                    map->ReactNativeMaps.MapView.fitToElements(true)
+                  )
+                ->ignore
+              : ()
           },
-          2000,
+          1500,
         );
 
       Some(_ => clearTimeout(t));
@@ -121,49 +138,30 @@ let make = (~navigation, ~route as _) => {
                 "latitudeDelta": 52.37115432732047,
                 "longitudeDelta": 41.884170323610,
               }>
-              {switch (query.allPlaces) {
-               | Some(places) =>
-                 places.nodes
-                 ->Belt.Array.keep(location =>
-                     switch (location) {
-                     | Some(location) =>
-                       cidade === ""
-                         ? true
-                         : location.name
-                           |> Js.String.toLowerCase
-                           |> Js.String.includes(
-                                cidade |> Js.String.toLowerCase,
-                              )
-                     | None => false
-                     }
-                   )
-                 ->Belt.Array.map(location =>
-                     switch (location) {
-                     | Some(location) =>
-                       <Marker
-                         key={string_of_int(location._id)}
-                         onPress={_ => {
-                           Keyboard.dismiss();
-                           navigation->Navigators.MapNavigator.Navigation.navigateWithParams(
-                             "Location",
-                             {location: location},
-                           );
-                         }}
-                         title={location.name}
-                         image={Image.Source.fromRequired(
-                           Packager.require("./Map/map_point.png"),
-                         )}
-                         coordinate={
-                           "latitude": location.latitude->float_of_string,
-                           "longitude": location.longitude->float_of_string,
-                         }
-                       />
-                     | None => React.null
-                     }
-                   )
-                 ->React.array
-               | None => React.null
-               }}
+              {places
+               ->Belt.Array.map(location =>
+                   location->Belt.Option.mapWithDefault(React.null, location => {
+                     <Marker
+                       key={string_of_int(location._id)}
+                       onPress={_ => {
+                         Keyboard.dismiss();
+                         navigation->Navigators.MapNavigator.Navigation.navigateWithParams(
+                           "Location",
+                           {location: location},
+                         );
+                       }}
+                       title={location.name}
+                       image={Image.Source.fromRequired(
+                         Packager.require("./Map/map_point.png"),
+                       )}
+                       coordinate={
+                         "latitude": location.latitude->float_of_string,
+                         "longitude": location.longitude->float_of_string,
+                       }
+                     />
+                   })
+                 )
+               ->React.array}
             </MapView>
           </View>
           <TextInput

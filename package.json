@@ -14,8 +14,6 @@
     "@react-native-community/masked-view": "^0.1.9",
     "@react-navigation/stack": "^5.2.7",
     "@reason-react-native/svg": "^12.1.2",
-    "axios": "^0.19.2",
-    "bs-axios": "^0.0.43",
     "bs-fetch": "^0.5.2",
     "bs-let": "^0.1.16",
     "bs-qs": "ryb73/bs-qs",

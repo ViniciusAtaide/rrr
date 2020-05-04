@@ -62,6 +62,7 @@ let styles =
       "input":
         style(
           ~backgroundColor="#fff",
+          ~fontFamily="Montserrat-Regular",
           ~marginTop=20.->dp,
           ~height=40.->dp,
           (),

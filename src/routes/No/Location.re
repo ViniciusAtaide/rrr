@@ -120,6 +120,7 @@ let make =
 
   ReactNative.(
     <ScrollView style={styles##bg}>
+      <StatusBar barStyle=`darkContent />
       <View style={styles##container}>
         <ReactNativeSvg.SvgXml
           style={styles##map}

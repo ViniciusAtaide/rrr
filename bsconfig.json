@@ -25,7 +25,6 @@
     "reason-promise",
     "reason-react-native-maps",
     "@reason-react-native/svg",
-    "bs-axios",
     "bs-fetch",
     "bs-qs"
   ]

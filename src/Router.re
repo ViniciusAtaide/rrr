@@ -115,16 +115,6 @@ module SubscribeStackScreen = {
 
 module MapStackScreen = {
   include Navigators.MapNavigator;
-  let mapOptions = _ =>
-    ReactNative.Platform.(
-      Navigators.MapNavigator.options(
-        ~headerShown=os === ios,
-        ~title="",
-        ~headerTransparent=true,
-        ~headerBackTitleVisible=false,
-        (),
-      )
-    );
 
   [@react.component]
   let make = (~navigation as _, ~route as _) => {
@@ -147,7 +137,17 @@ module MapStackScreen = {
       <Navigators.MapNavigator.Screen
         name="Location"
         component=Location.make
-        options=mapOptions
+        options={_ =>
+          ReactNative.Platform.(
+            Navigators.MapNavigator.options(
+              ~headerShown=os === ios,
+              ~title="",
+              ~headerTransparent=true,
+              ~headerBackTitleVisible=false,
+              (),
+            )
+          )
+        }
       />
     </Navigators.MapNavigator.Navigator>;
   };
