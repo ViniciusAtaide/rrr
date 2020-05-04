@@ -121,7 +121,6 @@ module MapStackScreen = {
         ~headerShown=os === ios,
         ~title="",
         ~headerTransparent=true,
-        ~headerTintColor="black",
         ~headerBackTitleVisible=false,
         (),
       )
@@ -139,7 +138,6 @@ module MapStackScreen = {
               ~headerShown=os === ios,
               ~title="",
               ~headerTransparent=true,
-              ~headerTintColor="black",
               ~headerBackTitleVisible=false,
               (),
             )
