@@ -80,55 +80,40 @@ module SubscribeStackScreen = {
     );
 
   [@react.component]
-  let make = (~navigation, ~route as _) => {
-    ReactNative.(
-      <Navigators.SubscribeNavigator.Navigator
-        mode=`card initialRouteName="Credentials">
-        <Navigators.SubscribeNavigator.Screen
-          name="Credentials"
-          component=Credentials.make
-          options={_ =>
-            ReactNative.Platform.(
-              Navigators.SubscribeNavigator.options(
-                ~headerShown=os === ios,
-                ~headerStyle=styles##header,
-                ~title="",
-                ~headerTransparent=true,
-                ~headerTintColor="white",
-                ~headerLeft=
-                  _ =>
-                    <TouchableOpacity
-                      onPress={_ =>
-                        navigation->Navigators.SubscribeNavigator.Navigation.goBack()
-                      }>
-                      <Text
-                        style={Style.style(~color="white", ~fontSize=40., ())}>
-                        "<"->React.string
-                      </Text>
-                    </TouchableOpacity>,
-                ~headerBackTitleVisible=false,
-                (),
-              )
+  let make = (~navigation as _, ~route as _) => {
+    <Navigators.SubscribeNavigator.Navigator
+      mode=`card initialRouteName="Credentials">
+      <Navigators.SubscribeNavigator.Screen
+        name="Credentials"
+        component=Credentials.make
+        options={_ =>
+          ReactNative.Platform.(
+            Navigators.SubscribeNavigator.options(
+              ~headerShown=os === ios,
+              ~headerStyle=styles##header,
+              ~title="",
+              ~headerTransparent=true,
+              ~headerTintColor="white",
+              (),
             )
-          }
-        />
-        <Navigators.SubscribeNavigator.Screen
-          name="Subscribe"
-          component=Subscribe.make
-          options=subscribeOptions
-        />
-        <Navigators.SubscribeNavigator.Screen
-          name="Options"
-          component=Options.make
-          options=subscribeOptions
-        />
-      </Navigators.SubscribeNavigator.Navigator>
-    );
+          )
+        }
+      />
+      <Navigators.SubscribeNavigator.Screen
+        name="Subscribe"
+        component=Subscribe.make
+        options=subscribeOptions
+      />
+      <Navigators.SubscribeNavigator.Screen
+        name="Options"
+        component=Options.make
+        options=subscribeOptions
+      />
+    </Navigators.SubscribeNavigator.Navigator>;
   };
 };
 
 module MapStackScreen = {
-  open ReactNative;
   include Navigators.MapNavigator;
   let mapOptions = _ =>
     ReactNative.Platform.(
@@ -143,7 +128,7 @@ module MapStackScreen = {
     );
 
   [@react.component]
-  let make = (~navigation, ~route as _) => {
+  let make = (~navigation as _, ~route as _) => {
     <Navigators.MapNavigator.Navigator mode=`card initialRouteName="Init">
       <Navigators.MapNavigator.Screen
         name="Init"
@@ -156,17 +141,6 @@ module MapStackScreen = {
               ~headerTransparent=true,
               ~headerTintColor="black",
               ~headerBackTitleVisible=false,
-              ~headerLeft=
-                _ =>
-                  <TouchableOpacity
-                    onPress={_ =>
-                      navigation->Navigators.MapNavigator.Navigation.goBack()
-                    }>
-                    <Text
-                      style={Style.style(~color="white", ~fontSize=40., ())}>
-                      "<"->React.string
-                    </Text>
-                  </TouchableOpacity>,
               (),
             )
           )
@@ -182,16 +156,48 @@ module MapStackScreen = {
 };
 
 module RootStackScreen = {
+  open ReactNative.Platform;
+
   include Stack.Make({
     type params = unit;
   });
 
   [@react.component]
   let make = () => {
-    <Navigator mode=`card headerMode=`none initialRouteName="Main">
-      <Screen name="Main" component=MainStackScreen.make />
-      <Screen name="Auth" component=SubscribeStackScreen.make />
-      <Screen name="Map" component=MapStackScreen.make />
+    <Navigator mode=`card initialRouteName="Main">
+      <Screen
+        name="Main"
+        component=MainStackScreen.make
+        options={_ => options(~headerShown=false, ())}
+      />
+      <Screen
+        name="Auth"
+        component=SubscribeStackScreen.make
+        options={_ =>
+          options(
+            ~headerShown=os === ios,
+            ~title="",
+            ~headerTransparent=true,
+            ~headerTintColor="white",
+            ~headerBackTitleVisible=false,
+            (),
+          )
+        }
+      />
+      <Screen
+        name="Map"
+        component=MapStackScreen.make
+        options={_ =>
+          options(
+            ~headerShown=os === ios,
+            ~title="",
+            ~headerTransparent=true,
+            ~headerTintColor="white",
+            ~headerBackTitleVisible=false,
+            (),
+          )
+        }
+      />
     </Navigator>;
   };
 };
