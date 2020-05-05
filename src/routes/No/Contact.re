@@ -37,14 +37,13 @@ let styles =
   ReactNative.Style.(
     ReactNative.StyleSheet.create({
       "bg": style(~backgroundColor="rgb(36, 37, 36)", ~height=100.->pct, ()),
-      "container":
-        style(~justifyContent=`flexEnd, ~paddingHorizontal=25.->dp, ()),
+      "container": style(~paddingHorizontal=25.->dp, ()),
       "middle":
         style(
           ~justifyContent=`center,
           ~alignItems=`flexStart,
           ~width=100.->pct,
-          ~height=800.->dp,
+          ~height=ReactNative.Dimensions.get(`window)##height->dp,
           (),
         ),
       "txt":
@@ -90,9 +89,13 @@ let styles =
           (),
         ),
       "signature":
-        style(~width=150.->dp, ~height=90.->dp, ~alignSelf=`center, ()),
+        style(
+          ~marginVertical=10.->dp,
+          ~alignSelf=`center,
+          (),
+        ),
       "figure":
-        style(~width=150.->dp, ~height=50.->dp, ~alignSelf=`center, ()),
+        style(~alignSelf=`center, ~marginTop=10.->dp, ()),
     })
   );
 
@@ -254,18 +257,10 @@ let make = (~navigation, ~route as _) => {
                    ? "Carregando"->React.string : "Enviar"->React.string}
               </Text>
             </TouchableOpacity>
-            <Image
-              style={styles##signature}
-              source={Image.Source.fromRequired(
-                Packager.require("../../images/signature.png"),
-              )}
-            />
-            <Image
-              style={styles##figure}
-              source={Image.Source.fromRequired(
-                Packager.require("../../images/30years.png"),
-              )}
-            />
+            <ReactNativeSvg.SvgXml xml=Svgs.signature style={styles##signature} width={97.->Style.dp} height={85.->Style.dp} />
+
+            <ReactNativeSvg.SvgXml xml=Svgs.years style={styles##figure} width={97.->Style.dp} height={40.->Style.dp} />
+            
           </View>
         </View>
       </ScrollView>

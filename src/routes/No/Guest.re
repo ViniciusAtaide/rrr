@@ -34,8 +34,8 @@ let styles =
           ~width=100.->pct,
           (),
         ),
-      "signature": style(~width=150.->dp, ~height=90.->dp, ()),
-      "figure": style(~width=150.->dp, ~height=50.->dp, ()),
+      "signature": style(~marginVertical=10.->dp, ()),
+      "figure": style(~marginTop=10.->dp, ()),
     })
   );
 
@@ -78,18 +78,10 @@ let make = (~navigation, ~route as _) => {
           </TouchableOpacity>
         </View>
         <View style={styles##center}>
-          <Image
-            source={Image.Source.fromRequired(
-              Packager.require("../../images/signature.png"),
-            )}
-            style={styles##signature}
-          />
-          <Image
-            source={Image.Source.fromRequired(
-              Packager.require("../../images/30years.png"),
-            )}
-            style={styles##figure}
-          />
+        <ReactNativeSvg.SvgXml xml=Svgs.signature style={styles##signature} width={97.->Style.dp} height={85.->Style.dp} />
+
+            <ReactNativeSvg.SvgXml xml=Svgs.years style={styles##figure} width={97.->Style.dp} height={40.->Style.dp} />
+          
         </View>
       </View>
     </View>

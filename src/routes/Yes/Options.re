@@ -57,7 +57,6 @@ let styles =
           ~flexBasis=42.->pct,
           (),
         ),
-      "signature": style(~width=100.->dp, ~height=70.->dp, ()),
       "dna":
         style(
           ~position=`absolute,
@@ -101,12 +100,8 @@ let make =
       />
       <View style={styles##container}>
         <View style={styles##top}>
-          <Image
-            style={styles##signature}
-            source={Image.Source.fromRequired(
-              Packager.require("../../images/signature.png"),
-            )}
-          />
+          <ReactNativeSvg.SvgXml xml=Svgs.signature width={97.->Style.dp} height={85.->Style.dp} />
+
           <Text style={styles##orange}>
             {j|ESCRITÓRIO DIGITAL|j}->React.string
           </Text>
