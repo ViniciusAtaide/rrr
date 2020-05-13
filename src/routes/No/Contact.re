@@ -88,14 +88,8 @@ let styles =
           ~fontSize=20.,
           (),
         ),
-      "signature":
-        style(
-          ~marginVertical=10.->dp,
-          ~alignSelf=`center,
-          (),
-        ),
-      "figure":
-        style(~alignSelf=`center, ~marginTop=10.->dp, ()),
+      "signature": style(~marginVertical=10.->dp, ~alignSelf=`center, ()),
+      "figure": style(~alignSelf=`center, ~marginTop=10.->dp, ()),
     })
   );
 
@@ -146,14 +140,7 @@ let make = (~navigation, ~route as _) => {
           )
           |> then_(Fetch.Response.json)
           |> then_(res => {
-               open ReactNative.ToastAndroid;
-               showWithGravityAndOffset(
-                 "Email Enviado",
-                 long,
-                 bottom,
-                 ~xOffset=0.,
-                 ~yOffset=50.,
-               );
+               SimpleToast.(showWithGravity("Email Enviado", long, bottom));
                ReactNative.Keyboard.dismiss();
                cb.reset();
 
@@ -257,10 +244,18 @@ let make = (~navigation, ~route as _) => {
                    ? "Carregando"->React.string : "Enviar"->React.string}
               </Text>
             </TouchableOpacity>
-            <ReactNativeSvg.SvgXml xml=Svgs.signature style={styles##signature} width={97.->Style.dp} height={85.->Style.dp} />
-
-            <ReactNativeSvg.SvgXml xml=Svgs.years style={styles##figure} width={97.->Style.dp} height={40.->Style.dp} />
-            
+            <ReactNativeSvg.SvgXml
+              xml=Svgs.signature
+              style={styles##signature}
+              width={97.->Style.dp}
+              height={85.->Style.dp}
+            />
+            <ReactNativeSvg.SvgXml
+              xml=Svgs.years
+              style={styles##figure}
+              width={97.->Style.dp}
+              height={40.->Style.dp}
+            />
           </View>
         </View>
       </ScrollView>

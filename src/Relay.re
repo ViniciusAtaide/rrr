@@ -30,14 +30,8 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
              if (Response.ok(resp)) {
                Response.json(resp);
              } else {
-               ReactNative.ToastAndroid.(
-                 showWithGravityAndOffset(
-                   "Erro na conexão",
-                   long,
-                   bottom,
-                   ~xOffset=0.,
-                   ~yOffset=50.,
-                 )
+               SimpleToast.(
+                 showWithGravity("Erro na conexão", long, bottom)
                );
 
                reject(

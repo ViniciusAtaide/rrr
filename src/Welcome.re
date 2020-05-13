@@ -110,7 +110,7 @@ let make = (~navigation, ~route as _) => {
             ])}
           />
           <View style={Style.list([styles##grayButton, styles##padding])} />
-          <TouchableHighlight
+          <TouchableOpacity
             onPress={_ =>
               navigation->Navigators.RootNavigator.Navigation.navigate(
                 "Guest",
@@ -121,15 +121,15 @@ let make = (~navigation, ~route as _) => {
                 {j|NÃO|j}->React.string
               </Text>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={_ =>
               navigation->Navigators.RootNavigator.Navigation.navigate("Auth")
             }>
             <View style={styles##orangeButton}>
               <Text style={styles##buttonText}> "SIM"->React.string </Text>
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
         <View style={styles##horizontal}>
           <View style={Style.list([styles##grayButton, styles##half])} />

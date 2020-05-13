@@ -37,7 +37,7 @@ let styles =
 [@react.component]
 let make = (~submit, ~valid, ~loading) => {
   <View style={styles##buttonWrapper}>
-    <TouchableHighlight onPress={_ => loading ? () : submit()}>
+    <TouchableOpacity onPress={_ => loading ? () : submit()}>
       <View style={styles##button}>
         <Text
           style={Style.listOption([
@@ -47,6 +47,6 @@ let make = (~submit, ~valid, ~loading) => {
           {loading ? "CARREGANDO"->React.string : "CONTINUAR"->React.string}
         </Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   </View>;
 };

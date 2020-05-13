@@ -198,7 +198,7 @@ let make =
              resolve();
            })
         |> ignore
-      )
+      ) 
     });
 
   <View style={styles##bg}>
@@ -264,7 +264,7 @@ let make =
                   Some(styles##radio),
                   form.input.iswhats ? Some(styles##radioActive) : None,
                 ])}>
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={_ =>
                     form.updateIswhats(input => {...input, iswhats: true})
                   }>
@@ -276,14 +276,14 @@ let make =
                     ])}>
                     {j|Sim|j}->React.string
                   </Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </View>
               <View
                 style={Style.listOption([
                   Some(styles##radio),
                   form.input.iswhats ? None : Some(styles##radioActive),
                 ])}>
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={_ =>
                     form.updateIswhats(input => {...input, iswhats: false})
                   }>
@@ -295,7 +295,7 @@ let make =
                     ])}>
                     {j|Não|j}->React.string
                   </Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </View>
             </View>
             {switch (form.phoneResult) {
