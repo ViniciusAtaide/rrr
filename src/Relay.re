@@ -1,4 +1,6 @@
 // [@bs.val] external a : () = "react-native-gesture-handler"
+[@bs.val] external api_url : string = "process.env.REACT_APP_BACKEND_URL";
+
 
 exception Graphql_error(string);
 
@@ -6,7 +8,7 @@ let fetchQuery: ReasonRelay.Network.fetchFunctionPromise =
   (operation, variables, _cacheConfig) =>
     Fetch.(
       fetchWithInit(
-        "https://mia.adv.br/graphql",
+        api_url ++ "/graphql",
         RequestInit.make(
           ~method_=Post,
           ~body=
